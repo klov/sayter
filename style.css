@@ -1,0 +1,107 @@
+@charset "utf-8";
+/* CSS Document */
+.main_area
+{
+	float:right;
+	height:100%;
+	width:100%;
+	background-color:#E1E1FF;
+}
+.menu
+{
+	float:right;
+	width:200px;
+	height:100%;
+	margin:0px;
+	background-color:#24364A;
+	}
+.body
+{
+	background-color:#EFECFF;
+	margin:0px;
+}
+.shapka
+{
+	
+	margin:0px;
+	background-color:#1E2E3E;
+	font-size:12px;
+	font-family:Tahoma, Geneva, sans-serif;
+	color:#FFF;
+	height:20px;
+	cursor:pointer;
+	border-bottom-width:1px;
+	border-bottom-style:ridge;
+	border-color:#212632;
+	margin:1px;
+}
+.date
+	{
+		margin:0px;
+		height:100%;
+	}
+.konteyner
+{
+	top:0px;
+	left:0px;
+	height:39px;
+	border-bottom-color:#212632;
+	border-bottom-style:solid;
+	border-bottom-width:1px;
+	background-color:#1D2B3B;
+	display:none;
+	}
+.lol
+	{
+	color:#FFF;
+	font-size:12px;
+	font-family:Tahoma, Geneva, sans-serif;
+	display:block;
+	text-decoration:none;
+	margin:1px;
+	}
+.lol input
+			{
+				display:inline;
+			}
+	.button
+		{
+		float:left;
+		font-weight:bold;
+		cursor:pointer;
+		height:15px;
+		border-width:1px;
+		border-color:#30384A;
+		margin:0px;
+		}
+
+	.button:active
+			{
+				height:15px;
+				background-color:rgba(106,90,205,0.1);
+			}
+	
+.krest
+{
+	display:inline;
+	margin:0px;
+	cursor:pointer;
+	float:right;	
+}
+
+	.hed
+	{
+		font-size:12px;
+		font-family:Tahoma, Geneva, sans-serif;
+		color:#81BEFF;
+		height:19px;
+		width:640px;
+		background-color:#334B65;
+	}
+#draggable{
+	height:200px;
+		width:600px;
+}
+#tabs div{
+	padding:0px;
+	}

@@ -1,0 +1,15 @@
+@charset "utf-8";
+/* CSS Document */
+
+
+.kod
+	{
+		max-height:240px;
+		color:#000;
+		height:200px;
+		width:600px;
+		margin:0px;
+		font-family:"Courier New", Courier, monospace;
+		font-size:12px;
+		overflow:auto;
+	}
