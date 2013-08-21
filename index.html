@@ -1,4 +1,4 @@
-<html >
+<html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Документ без названия</title>
@@ -14,6 +14,8 @@
 <script type="text/javascript" src="script2.js"></script>
 <script type="text/javascript" src="plagin/jquery.blockUI.js"></script>
 <script type="text/javascript" src="main/herlcppt.js" language="javascript">
+</script>
+<script type="text/javascript" src="main/websockets.js" language="javascript">
 </script>
 </head>
 <body class="body">
@@ -33,6 +35,10 @@
       tabs.tabs( "refresh" );
     });
     });
+	
+	
+	
+			
 	$("body>#container").draggable({ containment:"window",scroll: false, stack:"body>#container,body>#obraz",handle:".menu-window"});
 	$(".menu").draggable({ axis: "x",containment:"window",scroll: false});
 	$("#tabs >div").live("click",function(e){
@@ -51,10 +57,10 @@
   <ul>
     <li><a href="#home"><span>home</span></a></li>
          </ul>
-  			<div id="home">
-  				 <div class="kod" contenteditable="true" onKeyUp="Syntex(event.keyCode,this,true)">
+  			
+  				 <div id="home" class="kod" contenteditable="true" onKeyUp="focus_in(event.keyCode,this,true)" onKeyPress="focus_uot()" onMouseUp="focus_in(40,this,true)" onMouseDown="focus_uot()">
     			 </div>
-      		</div>
+      		
 		</div>
 	 </div>
  </div>

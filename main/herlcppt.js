@@ -1,5 +1,6 @@
  // JavaScript Document
-var on=false;
+catch_tag='';
+var index_massiv={};
 function preg_quote( str ) {   
     return str.replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
 }
@@ -12,36 +13,28 @@ var myRegExp = "\\b("+Slova[0];
 			}
 			myRegExp = myRegExp+")\\b";
 				var myRegExp = new RegExp(myRegExp,"gim") ;			//регулярка служебных
-	granica=/((\s)+|\/\*|\*\/|[(]|[)]|[{]|[}])/gim;
-function Syntex(par,html_tag,flag)
-{	
-//////////////////////////////////////////////////////////////////////////////
-	var browser = $.browser.mozilla; 
-	$('#yakor').remove();
-	var yakor=document.createElement('span');
-				yakor.setAttribute("name","koretka");
-				yakor.id="yakor"; 
-  
-//////////////////////////////////////////////////////////////////////////////
+	granica=/((\s)+|>|<|&nbsp;|&harr;|\/\*|\*\/|[(]|[)]|[{]|[}])/gim;
 
-	
+
+
+
+function focus_in(par,html_tag,flag)
+{	
 
 	if (par==13||par==86)
 {
+/////////////////////////////////////////////////////////////////////////
+	$('#yakor').remove();
+	
+	var yakor=document.createElement('span');
+				yakor.setAttribute("name","koretka");
+				yakor.id="yakor"; 
 	///////////////////////////////////////////////////////////////////////////
 	  if (document.getSelection) 
 	{	
 	var  sel=document.getSelection().getRangeAt(0);
-			if(browser)
-			{
     	  sel.insertNode(yakor);
-			}
-			else
-			{
-			 var rangeObj = document.createDocumentFragment();
-       		rangeObj.appendChild(yakor);
-			sel.isertNode(rangeObj);
-			}
+		
 	}
 	else  if (document.selection)
 	{
@@ -51,9 +44,11 @@ function Syntex(par,html_tag,flag)
 	selectedText.anchorNode;
 	}
 	///////////////////////////////////////////////////////////////////////////
+																					//добавление в массив на отправление
+	///////////////////////////////////////////////////////////////////////////
 	var txt=$(html_tag).html();
-	txt=txt.replace(/<span id="yakor" name="koretka"><\/span>/gim,"&harr;");
-	txt=txt.replace(/(<div name="stroka">)/gim,'');
+	txt=txt.replace(/(<span id="yakor" name="koretka"><\/span>|<span name="koretka" id="yakor"><\/span>)/gim,"&harr;");
+	txt=txt.replace(/(<div class="stroka">|<font color="#0000ff">|<\/font>)/gim,'');
 	txt=txt.replace(/(<\/div>)/gim,'<br>');											//устанавливаю якорь для коретки
 	var reg =new RegExp("(<br>)","m");
 	var msslov = txt.split(reg);
@@ -64,27 +59,47 @@ function Syntex(par,html_tag,flag)
 				{
 					if(msslov[i].length==0)
 					{
-						txt=txt+'<div name="stroka">&nbsp;&nbsp;</div>';
+						txt=txt+'<div class="stroka">&nbsp;&nbsp;</div>';
 					}else
-				txt=txt+'<div name="stroka">'+msslov[i]+'</div>';
+					
+				txt=txt+'<div class="stroka">'+msslov[i]+'</div>';
 				}
 			}
 			txt=txt.replace(/&harr;/gmi,'<span id="yakor" name="koretka"><\/span>');
 			$(html_tag).html("");
 			$(html_tag).html(txt);
+			var mas =document.getElementsByClassName("stroka");
+			
 			if(par==86)													//нажатие интера
 			$("div.kod div").each(function(index, element) {
-                Syntex(32,$(this),false)
+                backlight(this);
             });
-
+				var koretka = document.getElementsByName("koretka")[0];
+		if(koretka!=undefined)
+		if ( document.createRange ) {
+		    rng = document.createRange();
+    		rng.selectNode(koretka);
+    		sel = document.getSelection();
+    		sel.removeAllRanges();
+    		sel.addRange( rng );
+  			} else {
+    		var rng = document.body.createTextRange();
+    		rng.moveToElementText(koretka);
+    		rng.select();
+			}
+		
 }
-
-if (par==32|par==57|par==59|par==37|par==40|par==38|par==191|par==56|par==39)
-{
+		/////////////////////////////////////////////////////////////////////////////////
+if(par==40|par==38)
+{ 
 //////////////////////////////////////////////////////////////
   if (document.getSelection) 
-	{	
-	var  sel=document.getSelection().getRangeAt(0);											
+	{
+	$(".kod>span").remove();	
+	$(catch_tag).removeClass("activ_string");	
+	var  range=document.getSelection().getRangeAt(0);
+	var tag=html_tag;
+											
 	if(flag)
 	{
 		html_tag=document.getSelection().anchorNode;
@@ -96,17 +111,99 @@ if (par==32|par==57|par==59|par==37|par==40|par==38|par==191|par==56|par==39)
 			}	
 			while(html_tag.tagName!="DIV");
 	}
-	///////////////////////////////////////////////////
-			if(browser)
+	
+	$(html_tag).addClass("activ_string") ;
+	if(html_tag.classList.contains('stroka'))
+	{
+		
+		/////////////////////////////////////////////////////////////////////////////////////
+		var link={};
+		var tags=$(tag).children();
+		for(var i=0;i<tags.length;i++)
+		{
+			if (tags[i]==html_tag)
 			{
-    	  sel.insertNode(yakor);
-			}																			//помещение якоря
-			else
-			{
-			 var rangeObj = document.createDocumentFragment();
-       		rangeObj.appendChild(yakor);
-			sel.isertNode(rangeObj);
+				link['tag']=html_tag;
+				link['numbe']=i;
+				break;
 			}
+		}
+	if(tag.id in index_massiv)
+	{																						//добавление строк на отправку
+		index_massiv[tag.id].push(link);
+	} else
+	{
+		index_massiv[tag.id]=[html_tag];
+	}
+	/////////////////////////////////////////////////////////////////////////////////////	
+		var content=$(html_tag).text();
+		$(html_tag).text(content);
+		content =$(catch_tag).text();
+	
+	//////////////////////////////////////////////////
+	var masslov = content.split(granica);
+	var txt="";
+			 for(var i=0;i<masslov.length;i++)
+			 {
+				 if (masslov[i]==undefined)
+			 {masslov[i]="";}
+			 if(masslov[i].length!=0){	
+			 		if(masslov[i].search(myRegExp)!=-1)
+						{																			//разбиение текста по дивам
+							txt=txt+'<span class="oper">'+masslov[i]+'</span>';
+						}
+						else
+						{
+							txt+='<span>'+masslov[i]+'</span>';
+						}
+			}
+			}	
+		$(catch_tag).html(txt);
+	//////////////////////////////////////////////////
+	}
+	
+	//////////////////////////////////////////////////
+																			
+	}
+	
+///////////////////////////
+  			}
+			
+}
+function focus_uot()
+{
+	
+	var  range=document.getSelection().getRangeAt(0);											
+	
+		html_tag=document.getSelection().anchorNode;
+		do
+			{
+				if(html_tag.tagName=="DIV")
+				break;
+			html_tag=html_tag.parentElement;
+			}	
+			while(html_tag.tagName!="DIV");
+	
+	
+	if(html_tag.classList.contains('stroka'))
+	{
+	catch_tag=html_tag;
+	}
+}
+
+
+	
+function backlight(html_tag)
+{
+	$('#yakor').remove();
+	var yakor=document.createElement('span');
+	yakor.setAttribute("name","koretka");
+	yakor.id="yakor"; 
+//////////////////////////////////////////////////////////////
+  if (document.getSelection) 
+	{	
+		  var  range=document.getSelection().getRangeAt(0);											
+	   	  range.insertNode(yakor);								
 	}
 	else  if (document.selection)
 	{
@@ -121,12 +218,11 @@ if (par==32|par==57|par==59|par==37|par==40|par==38|par==191|par==56|par==39)
 		var NachKoment = false;
 $(html_tag).each(function(index, element) {
    
-	///////////////////////////////////////////////////
-			
+
 ////////////////////////////////////////////////////
     var MyText = $(this).html();
-	MyText=MyText.replace(/<span id="yakor" name="koretka"><\/span>/gi,'&harr;');				//якорь
-	MyText=MyText.replace(/(<span class="koment">|<\/span>|<span class="oper">|<span>|<div onkeyup="Syntex(event.keyCode,this)|<\/div>">)/gi,'');
+	MyText=MyText.replace(/(<span id="yakor" name="koretka"><\/span>|<span name="koretka" id="yakor"><\/span>)/gim,'&harr;');				//якорь
+	MyText=MyText.replace(/(<span class="koment">|<\/span>|<span class="oper">|<span>|<div onkeyup="Syntex(event.keyCode,this)|<\/div>">|<font color="#0000ff">|<\/font>)/gi,'');
 	var masslov = MyText.split(granica);
 	var txt="";
 			 for(var i=0;i<masslov.length;i++)
@@ -149,23 +245,23 @@ $(html_tag).each(function(index, element) {
 			koment();
 			
 });
-
-		}	
-		var koretka = document.getElementsByName("koretka")[0];
+			var koretka = document.getElementsByName("koretka")[0];
 		if(koretka!=undefined)
 		if ( document.createRange ) {
 		    rng = document.createRange();
     		rng.selectNode(koretka);
     		sel = document.getSelection();
     		sel.removeAllRanges();
-    		sel.addRange( rng );
+    		sel.addRange(rng);
   			} else {
     		var rng = document.body.createTextRange();
     		rng.moveToElementText(koretka);
     		rng.select();
-  			}	
-			
+  			}				
 }
+
+
+
 function koment()
 {
 	Koment_state=false;
@@ -189,6 +285,4 @@ function koment()
 			}
     });
 }
-
-
 

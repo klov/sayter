@@ -5,11 +5,20 @@
 .kod
 	{
 		max-height:240px;
+		background-color:#FFFFFF;
 		color:#000;
 		height:200px;
 		width:600px;
-		margin:0px;
+		margin:2px;
 		font-family:"Courier New", Courier, monospace;
-		font-size:12px;
+		font-size:14px;
 		overflow:auto;
 	}
+.stroka
+		{
+		}
+	
+.activ_string
+			{
+				background-color:#A4AACA;
+			}	
