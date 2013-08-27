@@ -7,16 +7,16 @@
  <link rel="stylesheet" href="jquery-ui-1.10.0.custom/css/custom-theme/jquery-ui-1.10.0.custom.css">
  <link href="main/MainStyl.css" rel="stylesheet" type="text/css">
 <link href="main/maincpp.css" rel="stylesheet" type="text/css">
+<link href="login.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="jquery.js"></script>
   <script type="text/javascript" src="jquery-ui-1.10.0.custom/js/jquery-ui-1.10.0.custom.min.js"></script>
   <script type="text/javascript" src="script.js"></script>
   <script type="text/javascript" src="script3.js"></script>
-<script type="text/javascript" src="script2.js"></script>
+<script type="text/javascript" src="connect.js"></script>
 <script type="text/javascript" src="plagin/jquery.blockUI.js"></script>
-<script type="text/javascript" src="main/herlcppt.js" language="javascript">
-</script>
-<script type="text/javascript" src="main/websockets.js" language="javascript">
-</script>
+<script type="text/javascript" src="main/websockets.js" language="javascript"></script>
+<script type="text/javascript" src="main/herlcppt.js" language="javascript"></script>
+<script type="text/javascript" src="login.js" language="javascript"></script>
 </head>
 <body class="body">
 <!-- ////////////////////////////////////////////////////////////////////////////////////////////////-->
@@ -50,7 +50,7 @@
 <div id="container" class="window">
               <div class="menu-window ">
               <span class="ui-icon ui-icon-circle-close button " title="выход"></span>
-              <span class="ui-icon  ui-icon-plusthick  button" onClick=" $.blockUI({ message: $('#add_fram') });  conact.str=this" ></span>
+              <span class="ui-icon  ui-icon-plusthick  button" onClick=" $.blockUI({ message: $('#add_fram') });  connact.str=this" ></span>
   		    	</div>
 	  <div class="main_area">
 		<div id="tabs">
@@ -58,7 +58,7 @@
     <li><a href="#home"><span>home</span></a></li>
          </ul>
   			
-  				 <div id="home" class="kod" contenteditable="true" onKeyUp="focus_in(event.keyCode,this,true)" onKeyPress="focus_uot()" onMouseUp="focus_in(40,this,true)" onMouseDown="focus_uot()">
+  				 <div id="home" class="kod">
     			 </div>
       		
 		</div>
@@ -71,7 +71,7 @@
 <div class="menu">
 			<!-- люди-->
         	<div >
-            <div class="shapka" onClick="Onanimation('conntent1',this)">
+            <div class="shapka lol" onClick="Onanimation('conntent1',this)">
             участники
             </div>
             <div id="conntent1"  state="0">
@@ -81,7 +81,7 @@
         <!-- группы-->
         
       <div >
-            <div class="shapka" onClick="Onanimation('conntent2',this)">
+            <div class="shapka lol" onClick="Onanimation('conntent2',this)">
   группы
             </div>
             <div id="conntent2"  state="0">
@@ -95,7 +95,7 @@
 
 <!--///////////////////////////Меню диалогов////////////////////////////////////////////////-->
 <div id="add_fram" style="display:none">
-<p style="color:#81BEFF; font-family:Tahoma, Geneva, sans-serif; font-size:12px;"><label>имя нового файла:</label><input  id="name_file" type="text">
+<p class="lol"><label>имя нового файла:</label><input  id="name_file" type="text">
 <select size="1" id="exp">
 <option value=".cpp">.cpp</option>
 <option value=".pas">.pas</option>
@@ -103,10 +103,18 @@
 <option value=".cs">.cs</option>
 </select>
 </p>
-<p><input type="button" onClick="conact.dialog_clic()" value="   OK   "> 
+<p><input type="button" onClick="connact.dialog_clic()" value="   OK   "> 
 <input type="button" onClick="$.unblockUI()"  value="отмена"></p>
 
 </div>
-<!--////////////////////////////Окно родного потока///////////////////////////////-->
+<!--////////////////////////////Вход///////////////////////////////-->
+<div id="login" style="display:none">
+<p class="lol"><label>имя нового файла:</label><input  id="name_file" type="text">
+</p>
+<p><input type="button" onClick="connact.dialog_clic()" value="   OK   "> 
+<input type="button" onClick="$.unblockUI()"  value="отмена"></p>
+</div>
+<!--/////////////////////////////////////////////////////////////////-->
+</div>
 </body>
 </html>

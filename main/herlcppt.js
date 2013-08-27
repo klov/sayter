@@ -1,4 +1,5 @@
  // JavaScript Document
+var stak_ws=-1;
 catch_tag='';
 var index_massiv={};
 function preg_quote( str ) {   
@@ -112,30 +113,11 @@ if(par==40|par==38)
 			while(html_tag.tagName!="DIV");
 	}
 	
-	$(html_tag).addClass("activ_string") ;
+	
 	if(html_tag.classList.contains('stroka'))
 	{
-		
-		/////////////////////////////////////////////////////////////////////////////////////
-		var link={};
-		var tags=$(tag).children();
-		for(var i=0;i<tags.length;i++)
-		{
-			if (tags[i]==html_tag)
-			{
-				link['tag']=html_tag;
-				link['numbe']=i;
-				break;
-			}
-		}
-	if(tag.id in index_massiv)
-	{																						//добавление строк на отправку
-		index_massiv[tag.id].push(link);
-	} else
-	{
-		index_massiv[tag.id]=[html_tag];
-	}
-	/////////////////////////////////////////////////////////////////////////////////////	
+	$(html_tag).addClass("activ_string") ;	
+			
 		var content=$(html_tag).text();
 		$(html_tag).text(content);
 		content =$(catch_tag).text();
@@ -159,6 +141,51 @@ if(par==40|par==38)
 			}
 			}	
 		$(catch_tag).html(txt);
+		
+	/////////////////////////////////////////////////////////////////////////////////////
+		var link={};
+		var tags=$(tag).children();
+		for(var i=0;i<tags.length;i++)
+		{
+			if (tags[i]==catch_tag)
+			{
+				link['tag']=catch_tag;
+				link['numbe']=i;
+				break;
+			}
+		}
+	if(tag.id in index_massiv)
+	{	
+		
+		if(index_massiv[tag.id].soc.ws === undefined || index_massiv[tag.id].soc.ws.readyState != 1)
+		{																	//добавление строк на отправку 
+		index_massiv[tag.id].date.push(link);
+		if(stak_ws==-1)
+		stak_ws =setInterval(send_date,1000);
+		}
+		else
+		{
+			index_massiv[tag.id].soc.send(link);
+		}
+	} else
+	{
+		index_massiv[tag.id]={};
+		index_massiv[tag.id].date=[];
+		index_massiv[tag.id].soc= new Socet();
+		index_massiv[tag.id].soc.connect("ws://192.168.2.33:9002");
+		if(index_massiv[tag.id].soc.ws === undefined || index_massiv[tag.id].soc.ws.readyState != 1)
+		{
+			index_massiv[tag.id].date=[link];
+			if(stak_ws==-1)
+			stak_ws =setInterval(send_date,1000);
+		}
+		else
+		{
+			index_massiv[tag.id].soc.send(link);
+		}
+		
+	}
+	/////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////
 	}
 	
@@ -286,3 +313,37 @@ function koment()
     });
 }
 
+function send_date()
+{
+	var flag = true;
+	var i = index_massiv.length;
+	for(obj in index_massiv)
+	{
+		if(obj.soc.ws === undefined || obj.soc.ws.readyState != 1)
+		{
+			obj.soc.connect("ws//192.168.2.33:9002");
+		}
+		else
+		{ 
+			var len =obj.date.length();
+			if (len>0)
+				{
+					flag =false;
+				}
+			for(var i=0;i<len;i++)
+				{
+					var s=obj.date.pop();
+					if(!obj.soc.send(s))
+						{
+							obj.date.push(s);
+							break;
+						}
+				}
+		}
+	
+	}
+	if(flag)
+		{
+			clearInterval(stak_ws);
+		}
+}
