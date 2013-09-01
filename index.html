@@ -23,9 +23,17 @@
 
 <!--//////////////////////////////////настройки/////////////////////////////////////////////////////-->
  <script type="text/javascript">
- 
+  window.onunload= function(){
+			 var XHRcon= $.ajax({
+		url:"http://localhost/sayter/php_script/user_chek.php?name="+login.name+"&out=true",
+		 type:"GET",
+	
+	});
+			 }
   $(function() {
+	  
 	  $(document).ready(function(e) {
+		  
 		  obd_tim=setInterval("apdate()",1000);
 	var tabs= $("#tabs").tabs();
 		$("input[type=button]").button();      
@@ -44,6 +52,8 @@
 	$("#tabs >div").live("click",function(e){
 		$(this).children("div:first").focus();
 		});
+		 $.blockUI({ message: $('#login') })
+		
 	});
 	
   </script>
@@ -57,11 +67,13 @@
   <ul>
     <li><a href="#home"><span>home</span></a></li>
          </ul>
-  			
-  				 <div id="home" class="kod">
+  				 <div id="home" >
+                 <p>
+                 	<span class="lol" >URL дата центра: </span>
+                    <input type="text" id="url" value="ws://192.168.2.33:9002" >
+                 </p>
     			 </div>
-      		
-		</div>
+   		</div>
 	 </div>
  </div>
 <!-- //////////////////////////////////////////////////////////////////////////////////////////////-->
@@ -109,10 +121,8 @@
 </div>
 <!--////////////////////////////Вход///////////////////////////////-->
 <div id="login" style="display:none">
-<p class="lol"><label>имя нового файла:</label><input  id="name_file" type="text">
-</p>
-<p><input type="button" onClick="connact.dialog_clic()" value="   OK   "> 
-<input type="button" onClick="$.unblockUI()"  value="отмена"></p>
+<p class="lol"><label>введите ваше имя </label><input  id="login_name" type="text"></p>
+<p><input type="button" onClick="login.in()" value="   вход   "> </p>
 </div>
 <!--/////////////////////////////////////////////////////////////////-->
 </div>

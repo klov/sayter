@@ -49,7 +49,7 @@ function focus_in(par,html_tag,flag)
 	///////////////////////////////////////////////////////////////////////////
 	var txt=$(html_tag).html();
 	txt=txt.replace(/(<span id="yakor" name="koretka"><\/span>|<span name="koretka" id="yakor"><\/span>)/gim,"&harr;");
-	txt=txt.replace(/(<div class="stroka">|<font color="#0000ff">|<\/font>)/gim,'');
+	txt=txt.replace(/(<div class="stroka">|<div class="stroka activ_string">|<font color="#0000ff">|<\/font>)/gim,'');
 	txt=txt.replace(/(<\/div>)/gim,'<br>');											//устанавливаю якорь для коретки
 	var reg =new RegExp("(<br>)","m");
 	var msslov = txt.split(reg);
@@ -157,7 +157,7 @@ if(par==40|par==38)
 	if(tag.id in index_massiv)
 	{	
 		
-		if(index_massiv[tag.id].soc.ws === undefined || index_massiv[tag.id].soc.ws.readyState != 1)
+		if(out_socet.ws === undefined || out_socet.ws.readyState != 1)
 		{																	//добавление строк на отправку 
 		index_massiv[tag.id].date.push(link);
 		if(stak_ws==-1)
@@ -165,15 +165,14 @@ if(par==40|par==38)
 		}
 		else
 		{
-			index_massiv[tag.id].soc.send(link);
+			out_socet.send(link);
 		}
 	} else
 	{
 		index_massiv[tag.id]={};
 		index_massiv[tag.id].date=[];
-		index_massiv[tag.id].soc= new Socet();
-		index_massiv[tag.id].soc.connect("ws://192.168.2.33:9002");
-		if(index_massiv[tag.id].soc.ws === undefined || index_massiv[tag.id].soc.ws.readyState != 1)
+		
+		if(out_socet.ws === undefined || out_socet.ws.readyState != 1)
 		{
 			index_massiv[tag.id].date=[link];
 			if(stak_ws==-1)
@@ -181,19 +180,16 @@ if(par==40|par==38)
 		}
 		else
 		{
-			index_massiv[tag.id].soc.send(link);
+			out_socet.send(link);
 		}
 		
 	}
-	/////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////
 	}
 	
-	//////////////////////////////////////////////////
 																			
 	}
 	
-///////////////////////////
+
   			}
 			
 }
@@ -201,7 +197,8 @@ function focus_uot()
 {
 	
 	var  range=document.getSelection().getRangeAt(0);											
-	
+	if(range.collapsed)
+		{		
 		html_tag=document.getSelection().anchorNode;
 		do
 			{
@@ -216,6 +213,7 @@ function focus_uot()
 	{
 	catch_tag=html_tag;
 	}
+		}
 }
 
 
@@ -317,15 +315,17 @@ function send_date()
 {
 	var flag = true;
 	var i = index_massiv.length;
+	out_socet
 	for(obj in index_massiv)
 	{
-		if(obj.soc.ws === undefined || obj.soc.ws.readyState != 1)
+		if(out_socet.ws === undefined || out_socet.ws.readyState != 1)
 		{
-			obj.soc.connect("ws//192.168.2.33:9002");
+			out_socet.close();
+			out_socet.connect($("#url").val());
 		}
 		else
 		{ 
-			var len =obj.date.length();
+			var len =index_massiv[obj].date.length();
 			if (len>0)
 				{
 					flag =false;

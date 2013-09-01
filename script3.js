@@ -2,7 +2,7 @@
 function apdate(){
 	if(timer==null){
 	var XHRcon= $.ajax({
-		url:"http://localhost/siter/U_and_G.php",
+		url:"http://localhost/sayter/U_and_G.php",
 		 type:"POST",
 		 error:function(jqXHR, textStatus, errorThrown)
 		 {
@@ -65,7 +65,7 @@ $(date).find("group").each(function(index, element) {
 		$(date).find("user").each(function(index, element) {
 			var kl=$(this).find("id").text();
 		var uid=$("#user"+kl);
-		if(!uid.length){
+		if(!uid.length&&$(this).find("name").text()!=login.name){
     var html='<div class="konteyner" id="user'+$(this).find("id").text()+'"><a  href="#"class="lol">'+$(this).find("name").text()+'</a><div><img class="button" src="img/amblem.gif" title="присоеденится" onClick="connact.connect_p2p({user_id:\''+$(this).find("id").text()+'\',url:\''+$(this).find("URL").text()+'\',user_name:\'dfg.cpp\'})"><span class=" ui-icon-locked ui-icon button" title="игнорировать"  onClick="ignor(this)"></span><span class=" ui-icon-arrow-4-diag ui-icon button" onClick="clos(this)" title="закрыть"></span></div></div>';
 	$("#conntent1").append(html);
 				if($("#conntent1").height()>0){
