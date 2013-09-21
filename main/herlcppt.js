@@ -1,5 +1,7 @@
  // JavaScript Document
-var stak_ws=-1;
+ var i=0;
+ var o=0;
+
 catch_tag='';
 var index_massiv={};
 function preg_quote( str ) {   
@@ -19,13 +21,15 @@ var myRegExp = "\\b("+Slova[0];
 
 
 
-function focus_in(par,html_tag,flag)
+function focus_in(par,html_tag)
 {	
 
+										
+	if(document.getSelection().getRangeAt(0).collapsed)
 	if (par==13||par==86)
 {
 /////////////////////////////////////////////////////////////////////////
-	$('#yakor').remove();
+
 	
 	var yakor=document.createElement('span');
 				yakor.setAttribute("name","koretka");
@@ -54,6 +58,7 @@ function focus_in(par,html_tag,flag)
 	var reg =new RegExp("(<br>)","m");
 	var msslov = txt.split(reg);
 	txt="";
+
 	for(var i=0;i<msslov.length;i++)
 			{
 				if(msslov[i]!="<br>")
@@ -63,7 +68,7 @@ function focus_in(par,html_tag,flag)
 						txt=txt+'<div class="stroka">&nbsp;&nbsp;</div>';
 					}else
 					
-				txt=txt+'<div class="stroka">'+msslov[i]+'</div>';
+				txt=txt+'<div class="stroka" >'+msslov[i]+'</div>';
 				}
 			}
 			txt=txt.replace(/&harr;/gmi,'<span id="yakor" name="koretka"><\/span>');
@@ -71,38 +76,73 @@ function focus_in(par,html_tag,flag)
 			$(html_tag).html(txt);
 			var mas =document.getElementsByClassName("stroka");
 			
-			if(par==86)													//нажатие интера
+			var link={};
+			var i=0;
+			if(par==86)												//нажатие интера
 			$("div.kod div").each(function(index, element) {
                 backlight(this);
+				
+			});
+			$("div.kod div").each(function(index, element) {
+				link['tag']=this;
+				link['numbe']=i;
+				link['id']=html_tag.id;
+				link['length']=$(html_tag).children().length;
+				 i++;
+				send(link); 
             });
+
+			
 				var koretka = document.getElementsByName("koretka")[0];
 		if(koretka!=undefined)
 		if ( document.createRange ) {
-		    rng = document.createRange();
-    		rng.selectNode(koretka);
+		      rng = document.createRange();
+  			rng.setEnd(koretka,0);
+			rng.setStart(koretka,0);
     		sel = document.getSelection();
     		sel.removeAllRanges();
     		sel.addRange( rng );
+	
   			} else {
     		var rng = document.body.createTextRange();
     		rng.moveToElementText(koretka);
     		rng.select();
 			}
-		
+	$('#yakor').remove();
 }
 		/////////////////////////////////////////////////////////////////////////////////
-if(par==40|par==38)
+else if(par==40|par==38|par==39|par==37)
 { 
+
 //////////////////////////////////////////////////////////////
   if (document.getSelection) 
 	{
+		/////////////////////////////////////////////////////////////////////////
+	
+	
+	var yakor=document.createElement('span');
+				yakor.setAttribute("name","koretka");
+				yakor.id="yakor"; 
+	///////////////////////////////////////////////////////////////////////////
+	  if (document.getSelection) 
+	{	
+	var  sel=document.getSelection().getRangeAt(0);
+    	  sel.insertNode(yakor);
+		
+	}
+	else  if (document.selection)
+	{
+	Gavno = true;
+	var selectedText=document.createRange();
+	selectedText.pasteHTML(yakor);
+	selectedText.anchorNode;
+	}
+	///////////////////////////////////////////////////////////////////////////
 	$(".kod>span").remove();	
-	$(catch_tag).removeClass("activ_string");	
+	$(".activ_string").removeClass("activ_string");	
 	var  range=document.getSelection().getRangeAt(0);
 	var tag=html_tag;
 											
-	if(flag)
-	{
 		html_tag=document.getSelection().anchorNode;
 		do
 			{
@@ -111,18 +151,25 @@ if(par==40|par==38)
 			html_tag=html_tag.parentElement;
 			}	
 			while(html_tag.tagName!="DIV");
-	}
+	
 	
 	
 	if(html_tag.classList.contains('stroka'))
 	{
 	$(html_tag).addClass("activ_string") ;	
 			
-		var content=$(html_tag).text();
-		$(html_tag).text(content);
-		content =$(catch_tag).text();
+		var content=$(html_tag).html();
+		
+		content=content.replace(/(<span id="yakor" name="koretka"><\/span>|<span name="koretka" id="yakor"><\/span>)/gim,'&harr;');			
+		content=content.replace(/(<span class="koment">|<\/span>|<span class="oper">|<span>|<div onkeyup="Syntex(event.keyCode,this)|<\/div>">|<font color="#0000ff">|<\/font>)/gi,'');
+		content=content.replace(/&harr;/gi,'<span id="yakor" name="koretka"><\/span>');
+		$(html_tag).html(content);
+		
 	
 	//////////////////////////////////////////////////
+	if(catch_tag!=html_tag)
+	{
+	content =$(catch_tag).text();
 	var masslov = content.split(granica);
 	var txt="";
 			 for(var i=0;i<masslov.length;i++)
@@ -131,7 +178,7 @@ if(par==40|par==38)
 			 {masslov[i]="";}
 			 if(masslov[i].length!=0){	
 			 		if(masslov[i].search(myRegExp)!=-1)
-						{																			//разбиение текста по дивам
+						{															//разбиение текста по дивам
 							txt=txt+'<span class="oper">'+masslov[i]+'</span>';
 						}
 						else
@@ -141,7 +188,7 @@ if(par==40|par==38)
 			}
 			}	
 		$(catch_tag).html(txt);
-		
+	}
 	/////////////////////////////////////////////////////////////////////////////////////
 		var link={};
 		var tags=$(tag).children();
@@ -149,47 +196,39 @@ if(par==40|par==38)
 		{
 			if (tags[i]==catch_tag)
 			{
+				link['id']=tag.id;
 				link['tag']=catch_tag;
 				link['numbe']=i;
+				link['length']=tabs.length;
 				break;
 			}
 		}
-	if(tag.id in index_massiv)
-	{	
 		
-		if(out_socet.ws === undefined || out_socet.ws.readyState != 1)
-		{																	//добавление строк на отправку 
-		index_massiv[tag.id].date.push(link);
-		if(stak_ws==-1)
-		stak_ws =setInterval(send_date,1000);
+													
+				
+			////////////////////////////////////////////////////////////////////
+					var koretka = document.getElementsByName("koretka")[0];
+		if(koretka!=undefined)
+		if ( document.createRange ) {
+		    rng = document.createRange();
+  			rng.setEnd(koretka,0);
+			rng.setStart(koretka,0);
+    		sel = document.getSelection();
+    		sel.removeAllRanges();
+    		sel.addRange( rng );
+	
+  			} else {
+    		var rng = document.body.createTextRange();
+    		rng.moveToElementText(koretka);
+    		rng.select();
+			}	
+		send(link);	
 		}
-		else
-		{
-			out_socet.send(link);
-		}
-	} else
-	{
-		index_massiv[tag.id]={};
-		index_massiv[tag.id].date=[];
-		
-		if(out_socet.ws === undefined || out_socet.ws.readyState != 1)
-		{
-			index_massiv[tag.id].date=[link];
-			if(stak_ws==-1)
-			stak_ws =setInterval(send_date,1000);
-		}
-		else
-		{
-			out_socet.send(link);
-		}
-		
-	}
-	}
 	
 																			
 	}
 	
-
+$('#yakor').remove();
   			}
 			
 }
@@ -273,12 +312,14 @@ $(html_tag).each(function(index, element) {
 			var koretka = document.getElementsByName("koretka")[0];
 		if(koretka!=undefined)
 		if ( document.createRange ) {
-		    rng = document.createRange();
-    		rng.selectNode(koretka);
+		      rng = document.createRange();
+  			rng.setEnd(koretka,0);
+			rng.setStart(koretka,0);
     		sel = document.getSelection();
     		sel.removeAllRanges();
-    		sel.addRange(rng);
-  			} else {
+    		sel.addRange( rng );
+	
+  			} else  {
     		var rng = document.body.createTextRange();
     		rng.moveToElementText(koretka);
     		rng.select();
@@ -311,39 +352,3 @@ function koment()
     });
 }
 
-function send_date()
-{
-	var flag = true;
-	var i = index_massiv.length;
-	out_socet
-	for(obj in index_massiv)
-	{
-		if(out_socet.ws === undefined || out_socet.ws.readyState != 1)
-		{
-			out_socet.close();
-			out_socet.connect($("#url").val());
-		}
-		else
-		{ 
-			var len =index_massiv[obj].date.length();
-			if (len>0)
-				{
-					flag =false;
-				}
-			for(var i=0;i<len;i++)
-				{
-					var s=obj.date.pop();
-					if(!obj.soc.send(s))
-						{
-							obj.date.push(s);
-							break;
-						}
-				}
-		}
-	
-	}
-	if(flag)
-		{
-			clearInterval(stak_ws);
-		}
-}
