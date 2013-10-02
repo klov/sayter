@@ -5,7 +5,7 @@ var in_socet =[];
 	{
 
 		
-		var t ="<user>"+login.name+"<numbe>"+e.numbe+"<lenght>"+e.length+"<file>"+e.id+"<date>"+e.tag.innerHTML;
+		var t ="<user>"+login.name+"<numbe>"+e.numbe+"<length>"+e.length+"<file>"+e.id+"<date>"+$(e.tag).text();
 	
 		if(!(e.id in index_massiv))
 		{
@@ -31,19 +31,20 @@ var in_socet =[];
       var ws = new WebSocket(url);
     
     ws.onopen = function(e) {
-        console.log("Client: A connection to "+this.ws.URL+" has been opened.<br />");
+
+   
         };
     
     ws.onerror = function(e) {
-        console.log(e);
+      
     };
     
     ws.onclose = function(e) {
-        consol.log( "Client: The connection to "+url+" was closed");
+        
     };
     
     ws.onmessage = function(e) {
-        consol.log("Server: "+e.data);
+       
     };
 	return ws;
 }
