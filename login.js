@@ -8,7 +8,7 @@ login.in = function()
 	$("#my_name").text(us_name);
 	$("#login").val("");
 	var XHRcon= $.ajax({
-		url:"http://localhost/sayter/php_script/user_chek.php?name="+us_name+"&ip=192.168.2.33",
+		url:"php_script/user_chek.php?name="+us_name+"&ip=192.168.2.33",
 		 type:"GET",
 	success:function (date)
 	{
