@@ -199,7 +199,7 @@ else if(par==40|par==38|par==39|par==37)
 				link['id']=tag.id;
 				link['tag']=catch_tag;
 				link['numbe']=i;
-				link['length']=tabs.length;
+				link['length']=tags.length;
 				break;
 			}
 		}
