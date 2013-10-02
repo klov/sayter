@@ -1,14 +1,23 @@
 @charset "utf-8";
 /* CSS Document */
-
+.frame
+	{
+		max-height:240px;
+		color:#000;
+		height:100%;
+		width:100%;
+		margin:2px;
+		overflow:auto;
+		font-size:14px;
+	}
 
 .kod
 	{
 		max-height:240px;
 		background-color:#FFFFFF;
 		color:#000;
-		height:200px;
-		width:592px;
+		min-height:200px;
+		min-width:592px;
 		margin:2px;
 		font-family:"Courier New", Courier, monospace;
 		font-size:14px;
@@ -22,3 +31,4 @@
 			{
 				background-color:#EAEAFF;
 			}	
+2q
