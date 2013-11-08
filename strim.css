@@ -24,3 +24,30 @@
 	visibility:hidden;
 	float:left;
 }
+#home
+{
+	height:100%;
+}
+.lol
+	{
+	color:#81BEFF;
+	font-size:12px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	margin:2px;
+	text-decoration:none;
+	margin:1px;
+
+	}
+.lol_text
+	{
+		font-size:12px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	display:block;
+	margin:3px;
+	}
+.lol input
+			{
+				display:inline;
+			}
