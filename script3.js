@@ -4,7 +4,7 @@
 function apdate(){
 	if(timer==null){
 	var XHRcon= $.ajax({
-		url:"http://localhost/sayter/U_and_G.php",
+		url:"U_and_G.php",
 		 type:"POST",
 		 error:function(jqXHR, textStatus, errorThrown)
 		 {
