@@ -6,11 +6,20 @@ $answer ="<files>";
 
 if(isset($_GET['name'])&&isset($_GET['file']))
 	{
-		// добавить фильтрацию входных данных
-		$qure ="SELECT id FROM user WHERE name LIKE '".$_GET['name']."'";
+	
+	$input_text = strip_tags($_GET["name"]);
+	$input_text = htmlspecialchars($input_text);
+	$input_text = mysql_escape_string($input_text);	
+	
+		$qure ="SELECT id FROM user WHERE name LIKE '".$input_text."'";
 	$result = mysql_query($qure,$db) or die("error select");
 	$myrow=mysql_fetch_array($result);
-	$result = mysql_query("SELECT * FROM files WHERE id_private=".$myrow['id']."AND name LIKE ".$_GET['file'],$db) or die('ERROR');
+	
+	$input_text = strip_tags($_GET["file"]);
+	$input_text = htmlspecialchars($input_text);
+	$input_text = mysql_escape_string($input_text);
+	
+	$result = mysql_query("SELECT * FROM files WHERE id_private=".$myrow['id']."AND name LIKE '".$input_text."'",$db) or die('ERROR');
 	
 	if(mysql_num_rows($result)>0)
 	{
@@ -19,8 +28,14 @@ if(isset($_GET['name'])&&isset($_GET['file']))
 	}
 else if (isset($_GET['name']))
 {
-	// добавить фильтрацию входных данных
-	$qure ="SELECT id FROM user WHERE name LIKE '".$_GET['name']."'";
+
+	$input_text = strip_tags($_GET["name"]);
+	$input_text = htmlspecialchars($input_text);
+	$input_text = mysql_escape_string($input_text);
+
+
+
+	$qure ="SELECT id FROM user WHERE name LIKE '".$input_text."'";
 	$result = mysql_query($qure,$db) or die("error select");
 	$myrow=mysql_fetch_array($result);
 	$result = mysql_query("SELECT * FROM files WHERE id_private=".$myrow['id'],$db) or die('ERROR');
