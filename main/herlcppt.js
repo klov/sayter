@@ -7,24 +7,51 @@ var index_massiv={};
 function preg_quote( str ) {   
     return str.replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
 }
+var  sharp_words =new Array("abstract","do","in","protected","true","as","double","int","public","try","base","else",
+"interface","readonly","typeof","bool","enum","internal","ref","uint","break","event","is","return","ulong","byte","explicit",
+"lock","sbyte","unchecked","case","extern","long","sealed","unsafe","catch","false","namespace","short","ushort","char","finally",
+"new","sizeof","using","checked","fixed","null","stackalloc","virtual","class","float","object","static","void","const","for",
+"operator","string","volatile","continue","foreach","out","struct","while","decimal","goto","override","switch","default","if",
+"params","this","delegate","implicit","private","throw");
 var Koment =new Array("/*","*/");
-var Slova  = new Array("asm","auto","break","case","catch","char","class","const","const_cast","continue","default","delete","do","double","dynamic_cast","else", "enum","explicit","export","extern","float","for","friend","goto","if","inline","int","long,mutable","namespace","new","operator","private","protected","public","register","reinterpret_cast","return","short","signed","sizeof","static","static_cast","struct","switch","template","this","throw","try","typedef","typeid"," typename","union","unsigned","using","virtual","void","volatile","wchar_t","while","then");
-var myRegExp = "\\b("+Slova[0];
-			for(var i=1;i<Slova.length;i++)
+var cpp_words = new Array("asm","auto","break","case","catch","char","class","const","const_cast","continue","default","delete","do","double","dynamic_cast","else", "enum","explicit","export","extern","float","for","friend","goto","if","inline","int","long,mutable","namespace","new","operator","private","protected","public","register","reinterpret_cast","return","short","signed","sizeof","static","static_cast","struct","switch","template","this","throw","try","typedef","typeid"," typename","union","unsigned","using","virtual","void","volatile","wchar_t","while","then");
+var RegExp_cpp = "\\b("+cpp_words[0];
+			for(var i=1;i<cpp_words.length;i++)
 			{
-				myRegExp = myRegExp+"|"+Slova[i];
+				RegExp_cpp = RegExp_cpp+"|"+cpp_words[i];
 			}
-			myRegExp = myRegExp+")\\b";
-				var myRegExp = new RegExp(myRegExp,"gim") ;			//регулярка служебных
+			RegExp_cpp = RegExp_cpp+")\\b";
+				var RegExp_cpp = new RegExp(RegExp_cpp,"gim") ;			//регулярка служебных
+
+
+var RegExp_sharp = "\\b("+sharp_words[0];
+			for(var i=1;i<sharp_words.length;i++)
+			{
+				RegExp_sharp = RegExp_sharp+"|"+sharp_words[i];
+			}
+			RegExp_sharp =RegExp_sharp+")\\b";
+				var RegExp_sharp = new RegExp(RegExp_sharp,"gim") ;	
+				
+				
 	granica=/((\s)+|>|<|&nbsp;|&harr;|\/\*|\*\/|[(]|[)]|[{]|[}])/gim;
 
+function words(type)
+{
+	switch (type){
+		case '.cpp':
+		return RegExp_cpp;
+		case '.cs':
+		return RegExp_cpp;
+		default : return new RegExp(/^\s/,"gim"); 
+		}
+};
 
 
 
-function focus_in(par,html_tag)
+
+function focus_in(par,html_tag,lang_name)
 {	
-
-										
+setTimeout("on_send()",500);	
 	if(document.getSelection().getRangeAt(0).collapsed)
 	if (par==13||par==86)
 {
@@ -80,14 +107,14 @@ function focus_in(par,html_tag)
 			var i=0;
 			if(par==86)												//нажатие интера
 			$("div.kod div").each(function(index, element) {
-                backlight(this);
+                backlight(this,words(lang_name));
 				
 			});
 			$("div.kod div").each(function(index, element) {
 				link['tag']=this;
 				link['numbe']=i;
 				link['id']=html_tag.id;
-				link['length']=$(html_tag).children().length;
+				link['len']=$(html_tag).children().length;
 				 i++;
 				send(link); 
             });
@@ -117,8 +144,7 @@ else if(par==40|par==38|par==39|par==37)
 //////////////////////////////////////////////////////////////
   if (document.getSelection) 
 	{
-		/////////////////////////////////////////////////////////////////////////
-	
+			
 	
 	var yakor=document.createElement('span');
 				yakor.setAttribute("name","koretka");
@@ -177,7 +203,8 @@ else if(par==40|par==38|par==39|par==37)
 				 if (masslov[i]==undefined)
 			 {masslov[i]="";}
 			 if(masslov[i].length!=0){	
-			 		if(masslov[i].search(myRegExp)!=-1)
+			
+			 		if(masslov[i].search(words(lang_name))!=-1)
 						{															//разбиение текста по дивам
 							txt=txt+'<span class="oper">'+masslov[i]+'</span>';
 						}
@@ -199,7 +226,7 @@ else if(par==40|par==38|par==39|par==37)
 				link['id']=tag.id;
 				link['tag']=catch_tag;
 				link['numbe']=i;
-				link['length']=tags.length;
+				link['len']=tags.length;
 				break;
 			}
 		}
@@ -257,7 +284,7 @@ function focus_uot()
 
 
 	
-function backlight(html_tag)
+function backlight(html_tag,myRegExp)
 {
 	$('#yakor').remove();
 	var yakor=document.createElement('span');
