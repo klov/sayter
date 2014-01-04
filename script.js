@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////////////////
-//работа анимации меню ,закрытие вкладок,анимация диалога
+//работа анимации меню ,закрытие вкладок,анимация диалога,генерация  строки
 /////////////////////////////////////////////////////////////////////////////////////////
 
 var Tmat,i;
@@ -59,3 +59,35 @@ $(Obj).addClass("ui-icon-locked");
 $(Obj).removeClass("ui-icon-unlocked");
 }
 } 
+
+
+function generet_string()
+{
+	var s= new String();
+	var max,min;
+	for(var i=0;i<30;i++){
+	min=0;
+	max=2
+	var e =Math.floor(Math.random() * (max - min + 1)) + min;
+	if (e==0)
+		{
+			min=48;
+			max=57;
+			s=s+String.fromCharCode(Math.floor(Math.random() * (max - min + 1)) + min);
+		}
+	else if(e==1)
+		{
+			min=65;
+			max=90;
+			s=s+String.fromCharCode(Math.floor(Math.random() * (max - min + 1)) + min);
+		}
+	else if(e==2)
+		{
+			min=97;
+			max=122;
+			s=s+String.fromCharCode(Math.floor(Math.random() * (max - min + 1)) + min);
+		}
+		
+	}
+	return s;
+}
