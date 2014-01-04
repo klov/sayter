@@ -12,29 +12,30 @@
   <script type="text/javascript" src="jquery-ui-1.10.0.custom/js/jquery-ui-1.10.0.custom.min.js"></script>
   <script type="text/javascript" src="script.js"></script>
   <script type="text/javascript" src="script3.js"></script>
-<script type="text/javascript" src="connect.js"></script>
 <script type="text/javascript" src="plagin/jquery.blockUI.js"></script>
+<script type="text/javascript" src="connect.js"></script>
 <script type="text/javascript" src="main/websockets.js" language="javascript"></script>
 <script type="text/javascript" src="main/herlcppt.js" language="javascript"></script>
 <script type="text/javascript" src="login.js" language="javascript"></script>
+<script type="text/javascript" src="my_h.js" language="javascript"></script>
 </head>
 <body class="body">
 <!-- ////////////////////////////////////////////////////////////////////////////////////////////////-->
 
 <!--//////////////////////////////////настройки/////////////////////////////////////////////////////-->
  <script type="text/javascript">
-  window.onunload= function(){
-			 var XHRcon= $.ajax({
-		url:"http://localhost/sayter/php_script/user_chek.php?name="+login.name+"&out=true",
-		 type:"GET",
-	
-	});
-			 }
+ 
   $(function() {
-	  
+	
 	  $(document).ready(function(e) {
+		login.secrid_code=generet_string();
+		  $(".kod").live("focus", function(){ 
 		  
-		  obd_tim=setInterval("apdate()",1000);
+			});
+		  	  $(".kod").live("blur", function(){ 
+			    clearInterval(obd_tim)
+				});
+		 //obd_tim=setInterval("apdate()",1000);
 	var tabs= $("#tabs").tabs();
 		$("input[type=button]").button();      
 		tabs.delegate( "span.ui-icon-close", "click", function() {
@@ -52,16 +53,40 @@
 	$("#tabs >div").live("click",function(e){
 		$(this).children("div:first").focus();
 		});
-		 $.blockUI({ message: $('#login') })
+		if(getCookie("name")==undefined)
+		{
+			$.blockUI({ message: $('#login') });
+		}
+			else
+			{
+				menu_socet = Socet(adres_name);
+				menu_socet.onclose =function(e)
+					{
+						$.blockUI({ message: $('#login') });
+					}
+			menu_socet.onopen = function(e)
+					{	
+						var eve ={
+						name:getCookie("name")
+								};
+						var str= JSON.stringify(eve);
+						menu_socet.send(str);
+					}
+			menu_socet.onmessage = login.begin;
+		
+			
+			}
+			
+		 
 		
 	});
 	
   </script>
 <div id="container" class="window">
               <div class="menu-window ">
-              <span class="ui-icon ui-icon-circle-close button " title="выход"></span>
               <span class="ui-icon  ui-icon-plusthick  button" onClick=" $.blockUI({ message: $('#add_fram') });  connact.str=this" ></span>
               <span class="lol" id="my_name"></span>
+              <label  id="connect_status" class="lol_text"></label>
   		    	</div>
 	  <div class="main_area">
 		<div id="tabs">
@@ -70,9 +95,9 @@
          </ul>
   				 <div id="home" >
                  <p>
-                 	<span class="lol" >URL сервера данных: </span>
-                    <input type="text" id="url" value="ws://192.168.2.33:9002" >
-                 </p>
+				<label class="lol_text" >URL сервера данных: </label>
+				<input type="text" id="url" value="ws://192.168.2.33:9002" >
+				</p>
     			 </div>
    		</div>
 	 </div>
@@ -93,16 +118,7 @@
         
         <!-- группы-->
         
-      <div >
-            <div class="shapka lol" onClick="Onanimation('conntent2',this)">
-  группы
-            </div>
-            <div id="conntent2"  state="0">
-              </div>
-              <div id="labal1"><div>
-              <div id="label2"></div>
-        </div>
-        
+            
 <!-- настройки-->
 		   
 </div>
@@ -110,7 +126,7 @@
 
 <!--///////////////////////////Меню диалогов////////////////////////////////////////////////-->
 <div id="add_fram" style="display:none">
-<p class="lol"><label>имя нового файла:</label><input  id="name_file" type="text">
+<p><label>имя нового файла:  </label><input  id="name_file" type="text">
 <select size="1" id="exp">
 <option value=".cpp">.cpp</option>
 <option value=".pas">.pas</option>
@@ -118,16 +134,27 @@
 <option value=".cs">.cs</option>
 </select>
 </p>
-<p><input type="button" onClick="connact.dialog_clic()" value="   OK   "> 
-<input type="button" onClick="$.unblockUI()"  value="отмена"></p>
 
+
+<p><input type="button" onClick="connact.dialog_clic()" class="lol_text" value="   OK   "> 
+<input type="button" onClick="$.unblockUI()"  value="отмена">
+</p>
 </div>
 <!--////////////////////////////Вход///////////////////////////////-->
 <div id="login" style="display:none">
-<p class="lol"><label>введите ваше имя </label><input  id="login_name" type="text"></p>
+<p class="lol_text"><label>введите ваше имя </label><input  id="login_name" type="text"></p>
 <p><input type="button" onClick="login.in()" value="   вход   "> </p>
 </div>
 <!--/////////////////////////////////////////////////////////////////-->
+<div id="dialog_requezt" style="display:none">
+<p><span id="requezt_user"></span></p>
+<p><input type="button" id="requezt_ok"  class="lol_text" value="   OK   "> 
+<input type="button"  id="requezt_none"  value="отмена"></p>
 </div>
+<!--/////////////////////////////////////////////////////////////////-->
+</div>
+
+<!--/////////////////////////////////////////////////////////////////////-->
+
 </body>
 </html>

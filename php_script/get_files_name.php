@@ -11,7 +11,7 @@ if(isset($_GET['name'])&&isset($_GET['file']))
 	$input_text = htmlspecialchars($input_text);
 	$input_text = mysql_escape_string($input_text);	
 	
-		$qure ="SELECT id FROM user WHERE name LIKE '".$input_text."'";
+		$qure ="SELECT id FROM user_online WHERE name LIKE '".$input_text."'";
 	$result = mysql_query($qure,$db) or die("error select");
 	$myrow=mysql_fetch_array($result);
 	
@@ -35,7 +35,7 @@ else if (isset($_GET['name']))
 
 
 
-	$qure ="SELECT id FROM user WHERE name LIKE '".$input_text."'";
+	$qure ="SELECT id FROM user_online WHERE name LIKE '".$input_text."'";
 	$result = mysql_query($qure,$db) or die("error select");
 	$myrow=mysql_fetch_array($result);
 	$result = mysql_query("SELECT * FROM files WHERE id_private=".$myrow['id'],$db) or die('ERROR');
