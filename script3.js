@@ -35,21 +35,7 @@ var dbdate=[];
 $(date).find("group").each(function(index, element) {
    dbdate[dbdate.length]="group"+$(this).find("id").text();
 });
-$("#conntent2>div").each(function(index, element) {
-    var s=$(this).attr("id");
-	var flag= false;
-		for(var i=0;i<dbdate.length;i++)
-		{
-			if(s==dbdate[i])
-			flag=true;
-		}
-		if(!flag){
-		if($("#conntent2").height()>0){
-						$(this).toggle("10");
-						}
-		$(this).remove();
-		}
-});
+
 $(date).find("group").each(function(index, element) {
 			var kl=$(this).find("id").text();
 		var uid=$("#group"+kl);
