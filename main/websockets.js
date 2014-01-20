@@ -108,7 +108,7 @@ function send_date()
 				};
 				var str= JSON.stringify(eve);
 				this.send(str);
-				//this.send("<type>out<file>"+obj+"<user>"+login.name);
+				
 			$("#connect_status").removeClass("connect_status_off").addClass("connect_status_on").text("соеденение активно");
 			}
 			out_socet.onclose = function(e)
@@ -192,5 +192,9 @@ function finel_state_socet(e)
 					{
 						connact.add_new_users(cat);
 					}
+			else if(('ask' in cat)&&(cat.ask=='not_give'))
+			{
+				alert("user "+cat.from_user+" rejected the proposal");
+			}
 							
 }
