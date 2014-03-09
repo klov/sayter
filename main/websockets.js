@@ -46,13 +46,12 @@ function on_send()
 
 	function send(e)
 	{
-		//var t ="<user>"+login.name+"<numbe>"+e.numbe+"<length>"+e.length+"<file>"+e.id+"<date>"+$(e.tag).text();
         var eve ={
 			user:login.name,
 			numbe:e.numbe,
 			len:e.len,
 			file:e.id,
-			date:$(e.tag).text()
+			date:e.text
 			};
 		
 		
@@ -157,7 +156,7 @@ function finel_state_socet(e)
 						
 			else if(('ask' in cat)&&(cat.ask=='get_connect'))
 					{
-						$("#requezt_user").text("пользователь "+cat.from_user+" хочет подключиться");
+						$("#requezt_user").text("user "+cat.from_user+" wants to connect ");
 						$.blockUI({ message: $('#dialog_requezt') });
 						$("#requezt_ok").bind("click",function(e){
 						var date= new Array();
