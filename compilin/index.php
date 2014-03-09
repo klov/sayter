@@ -1,15 +1,15 @@
   ﻿<?php
 
-$mas_type =array();
-include_once("../php_script/connect_db.php");
-		$name = strip_tags($_GET["user_name"]);
+
+include_once("./connect_db.php");
+		$name = strip_tags($_POST["user_name"]);
 		$name = htmlspecialchars($name);
 		$name = mysql_escape_string($name);
 
-		$pas = strip_tags($_GET["password"]);
+		$pas = strip_tags($_POST["password"]);
 		$pas = htmlspecialchars($pas); 
 		$pas = mysql_escape_string($pas);
-		if(!preg_match("\,|\s",$_GET["type"]))
+		if(!preg_match("\,|\s",$_POST["type"]))
 		{
 		$qure ="SELECT * FROM user_online WHERE name LIKE '".$name."' AND password LIKE '".$pas."'";
 	
@@ -18,7 +18,7 @@ include_once("../php_script/connect_db.php");
 		if(mysql_num_rows($result)>0)
 		{
 		
-			$name_file=uniqid("").$_GET["type"];
+			$name_file=uniqid("").$_POST["type"];
 
 			$name_file="./".$name."/".$name_file;
 			$dir_name="./".$name;
@@ -26,23 +26,22 @@ include_once("../php_script/connect_db.php");
 			if(mkdir($dir_name,0777,true))
 			{
 			$fp = fopen($name_file,"w+");
-			if(fwrite($fp,$_GET["file"]))
+			if(fwrite($fp,$_POST["file"])&&($_POST["type"]==".cpp"))
 			{
-			$qure = "gcc ".$name_file."  -lstdc++ -o ".$dir_name."/out  2>&1";
+			$qure = "gcc ".$name_file." -Wall -lstdc++ -o ".$dir_name."/out  2>&1";
 			exec($qure,$output,$ret_val);
 			if($ret_val)
 				{	
+					foreach($output as $val)
+					$ansver.=$val."<br>";
 					
-					$ansver = json_encode($output);
 					echo $ansver;
 				} else
 				{
 					
-					echo "{\"resul\":\"compilation is successful\"}";
+					echo "compilation is successful";
 					
 				}
-		}else{
-		echo "{\"error\":\"error write \"}";
 		}
 		fclose($fp);
 
