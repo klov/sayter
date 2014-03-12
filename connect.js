@@ -4,10 +4,28 @@
 // и меню
 //////////////////////////////////////////////////////////////////////////////////////
 len_tabs = 0;
-
+var herf={};
+var index_massiv={};
+var compilin_file =new Array(".cpp")
 var connact =new Object()
  connact.str=undefined;
  connact.pm="";
+function compile(editor,aotput,typ)
+{
+	
+		var lins =editor.getSession().toString() ;
+		
+		$(aotput).remove(".debag-area");
+		$.post("./compilin/index.php",{file:lins,user_name:login.name,password:login.sek_key,file:lins,type:typ}, function(e){
+			
+				$(aotput).remove(".debag-area");
+				var elem = document.createElement("div");
+				$(elem).addClass("debag-area").html(e);
+				$(aotput).append(elem);
+				});
+}
+
+
 connact.dialog_clic=function ()
 { 
 var po;
@@ -15,7 +33,7 @@ var h;
 $("#url").attr("disabled","disabled");
 if (this.str.tagName!=="DIV") {
  po=$(this.str).parent().parent();
-h=$("#name_file").val()+$("#exp").val();
+h=$("#name_file").val()+$("#exp :selected").text();
 var id = h.replace(/\./g,"_");
 }
 else{
@@ -34,11 +52,66 @@ po=$(po).children(".main_area").children("div:first");
 	var obj='<li><a href="#fragment-'+le+'"><span>'+h+'</span></a><span class="ui-icon ui-icon-close krest" role="presentation"></span></li>';
 	
 	$(po).children("ul").append(obj);
-	obj='<div id="fragment-'+le+'"><div class="kod" id="'+id+'" contenteditable="true" onKeyUp="focus_in(event.keyCode,this,\''+$("#exp").val()+'\')"  onKeyUp="focus_in(event.keyCode,this)" onKeyPress="focus_uot()" onMouseUp="focus_in(40,this,\''+$("#exp").val()+'\')" onMouseDown="focus_uot()""></div></div>';
+	if(compilin_file.indexOf($("#exp :selected").text())>=0)
+	{
+	obj='<div id="fragment-'+le+'"><div class="kod" id="'+id+'"></div><div class="debag-area"><div class="button"><span class="ui-icon ui-icon-play icon-compilin"></span><span class="lol">compilin</span><div class="none"><div></div></div>';
+	}else
+	{
+		obj='<div id="fragment-'+le+'"><div class="kod" id="'+id+'"></div></div></div>';
+	}
+	
+				
 	$(po).append(obj);
 	$(po).tabs( "refresh" );
-	
-	
+////////////////////////////////////подключение подсветки ace//////////////////////
+var ed = ace.edit(id);
+	ed.name=id;
+    ed.setTheme("ace/theme/eclipse");
+	var str ="ace/mode/"+$("#exp :selected").val();
+    ed.getSession().setMode(str);
+	ed.on("change",function(e,edit){
+		var re =e.data;
+		var lins =edit.getSession().getDocument().getAllLines();
+		
+		if(("action" in re)&&re.action=="removeLines")
+		{
+				for(var i=0;i<re.lines.length;i++)
+				{
+					var link={};
+			link["numbe"]=i;
+			link["len"]=lins.length;
+			link["text"]=lins[i];
+			link["id"]=edit.name;
+			send(link);
+				}
+		}
+		else if(("action" in re)&&re.action=="insertLines")
+		{
+			for(var i=0;i<re.lines.length;i++)
+				{
+					var link={};
+			link["numbe"]=re.range.start.row+i;
+			link["len"]=lins.length;
+			link["text"]=lins[re.range.start.row+i];
+			link["id"]=edit.name;
+			send(link);
+				}
+		}	
+		else if(("action" in re)&&(re.action=="insertText")||(re.action=="removeText"))
+		{
+			var link={};
+			link["numbe"]=re.range.start.row;
+			link["len"]=lins.length;
+			link["text"]=lins[re.range.start.row];
+			link["id"]=edit.name;
+			send(link);
+		}
+		
+		});
+		herf[$("#text").val()]=ed;
+		$(".tbutton").bind("click",compile(herf[$("#text").val()],$("#fragment-"+le),$("#exp :selected").text()));			
+///////////////////////////////////////////////////////////////////////////////////
+		
 	 var tabs= $(po).tabs();												// удаление вкладок
 	 tabs.delegate( "span.ui-icon-close", "click", function() {
 	  var name_file = $( this ).closest( "li" ).children("a").children("span").text();
@@ -52,9 +125,10 @@ po=$(po).children(".main_area").children("div:first");
   		var str= JSON.stringify(eve);
 		out_socet.send(str);
 		
-	  //out_socet.send("<type>close<file>"+name_file+"<user>"+login.name);
+
 	  var XHRcon= $.ajax({
-		url:"php_script/files.php?file="+name_file.replace(/\./g,"_")+"&user_name="+login.name+"&close=true",
+		url:"php_script/files.php?file="+name_file.replace(/\./g,"_")+"&user_name="+login.name+
+		"&close=true",
 		 type:"GET",
 		 });
 		 $( "#" + panelI ).remove();
@@ -79,12 +153,11 @@ po=$(po).children(".main_area").children("div:first");
 				};
   				var str= JSON.stringify(eve);
 				this.send(str);
-				//this.send("<type>out<file>"+h+"<user>"+login.name);
-			$("#connect_status").removeClass("connect_status_off").addClass("connect_status_on").text("соеденение активно");
+			$("#connect_status").removeClass("connect_status_off").addClass("connect_status_on").text("connection is active");
 			}
 			out_socet.onclose = function(e)
 			{
-				$("#connect_status").removeClass("connect_status_on").addClass("connect_status_off").text("соеденение разорвано");
+				$("#connect_status").removeClass("connect_status_on").addClass("connect_status_off").text("connection is broken");
 			}
 		
 	}
@@ -206,7 +279,7 @@ po=$(po).children(".main_area").children("div:first");
 							var obj='<li><a href="#'+mas_date.file.replace(/\./g,"_")+mas_date.user+'"><span>'+mas_date.file+'</span></a><span class="ui-icon ui-icon-close krest" role="presentation"></span></li>';
 	
 							$("#"+mas_date.user).children("ul").append(obj);
-							obj='<div  id="'+mas_date.file.replace(/\./g,"_")+mas_date.user+'" class="frame"></div>';
+							obj='<div  id="'+mas_date.file.replace(/\./g,"_")+mas_date.user+'" ><div class="frame"></div></div>';
 							$("#"+mas_date.user).append(obj);
 							$("#"+mas_date.user).tabs( "refresh" );
 	
