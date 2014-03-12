@@ -1,5 +1,5 @@
 // JavaScript Document
-adres_name='ws://192.168.2.33:9000';
+adres_name='ws://151.248.115.227:9003';
 var login ={}
 login.name='';
 acsses_key=[];
@@ -17,6 +17,7 @@ login.in = function()
 	
 	var us_name =$("#login_name").val();
 	$("#my_name").text(us_name);
+	$("#container").show();
 	$("#login").val("");
 	var XHRcon= $.ajax({
 		url:"php_script/user_chek.php?name="+us_name+"&ip="+$("#url").val(),
@@ -37,7 +38,8 @@ login.in = function()
 			menu_socet = Socet(adres_name);
 			menu_socet.onclose =function(e)
 			{
-				$.blockUI({ message: $('#login') });
+			//	$.blockUI({ message: $('#login') });
+			obd_tim=setInterval("apdate()",1000);
 			}
 			menu_socet.onopen = function(e)
 			{
@@ -82,7 +84,9 @@ var cat =JSON.parse(e.data);
 								$.unblockUI();
 								$("#my_name").val(cat.user).css("visibility","visible");
 								$("#my_name").text(getCookie("name"));
+								$("#container").show();
 			login.name= getCookie("name");
+			login.sek_key=cat.password;
 			menu_socet.onmessage = finel_state_socet;
 								
 							}
