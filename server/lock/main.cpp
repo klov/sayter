@@ -1,16 +1,16 @@
-
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
 #include <map>
 #include <vector>
 #include <string>
-#include <mysql/mysql.h>
+
 #include <sstream>
 #include <locale>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include<iostream>
 #include<fstream>
+#include <msql.h>
 
 typedef websocketpp::server<websocketpp::config::asio> server;
 
@@ -20,153 +20,6 @@ using websocketpp::lib::placeholders::_2;
 using websocketpp::lib::bind;
 
 using namespace std;
-
-
-
-class msql{
-    public:
-
-
-    msql(const string & host,const string & user,const string & password,const string & db)
-    {
-     connect(host,user,password,db);
-
-    }
-
-    ~msql()
-    {
-        mysql_close(&mysql);
-    }
-
-
-    int connect(const string & host,const string & user,const string & password,const string & db)
-    {
-
-        if(! mysql_real_connect(&mysql,host.c_str(),user.c_str(),password.c_str(),db.c_str(),MYSQL_PORT,NULL,0))
-        {
-            std::cout<< mysql_error(&mysql)<<std::endl;
-            return 1;
-
-        }
-        return 0;
-    }
-
-    int select_bd(const string & db )
-    {
-        if(!mysql_select_db(&mysql,db.c_str()))
-        {
-            return -1;
-        }
-        return 0;
-    }
-
-    string filtr(string in) {
-        string out=in;
-       /*   out.replace(out.begin(),out.end(),"'","\'");
-          out.replace(out.begin(),out.end(),"\x00","\\x00");
-          out.replace(out.begin(),out.end(),"\n","\\n");                //разобраться
-          out.replace(out.begin(),out.end(),"\r","\\r");
-          out.replace(out.begin(),out.end(),"\\","\\\\");
-          out.replace(out.begin(),out.end(),"\x1a","\\x1a"); */
-          return out;
-      }
-
-
-
-
-    std::vector<std::map<string,string>> querys(string  ask )
-    {
-      std::vector<std::map<string,string>> result;
-     map<string,string> obj;
-    if (mysql_query(&mysql, ask.c_str()))
-    {
-     obj["error"]=string(mysql_error(&mysql));
-     result.push_back(obj);
-     return result;
-    }
-
-      if (!(res = mysql_store_result(&mysql)))
-    {
-        obj["error"]=string(mysql_error(&mysql));
-        result.push_back(obj);
-        return result;
-    }
-      while((row = mysql_fetch_row(res))) {
-        for (int i=0 ; i < mysql_num_fields(res); i++)
-        {
-            std::ostringstream out;
-            out<<i;
-            obj[out.str()]=row[i];
-            result.push_back(obj);
-        }
-
-      }
-
-    mysql_free_result(res);
-    }
-
-
-    std::vector<std::map<string,string>> q_select(std::vector<string> table,std::vector<string> fields,const string & additional)
-    {
-        std::vector<std::map<string,string>> result;
-       map<string,string> obj;
-
-       string ask = "SELECT  ";
-               for(int i=0;i<fields.size()-1;i++)
-                {
-                   ask+=filtr(fields[i])+",";
-                }
-
-               ask+=fields[fields.size()-1];
-       ask+=" FROM ";
-       for(int i=0;i<table.size();i++)
-        {
-    ask+=filtr(table[i]);
-        }
-       ask+=" "+additional;
-
-
-      if (mysql_query(&mysql, ask.c_str()))
-      {
-       obj["error"]=string(mysql_error(&mysql));
-       result.push_back(obj);
-       return result;
-      }
-
-        if (!(res = mysql_store_result(&mysql)))
-      {
-          obj["error"]=string(mysql_error(&mysql));
-          result.push_back(obj);
-          return result;
-      }
-        while((row = mysql_fetch_row(res))) {
-           obj.clear();
-          for (int i=0 ; i < mysql_num_fields(res); i++)
-          {
-
-              obj[fields[i]]=row[i];
-
-          }
-
-          result.push_back(obj);
-        }
-
-      mysql_free_result(res);
-    }
-
-
-
-
-
-
-
-    private:
-
-    MYSQL mysql;
-    MYSQL_RES *res;
-    MYSQL_ROW row;
-};
-
 
     struct coonntent_dat{
         string name;
@@ -244,7 +97,11 @@ class msql{
                             std::vector<string> fields(f,f+3);
                           string additional="WHERE name='"+filtr(name)+"'";
                             std::vector<std::map<string,string>> q= link_db->q_select(table,fields,additional);
-
+                            if((q.size()>0)&&(q[0].count("error")>0)&&(q[0]["error"]=="MySQL server has gone away"))
+                            {
+                                link_db->rebbot();
+                                q= link_db->q_select(table,fields,additional);
+                            }
                             if(q.size()==1)
                             {
                                 std::map<string,string> ma =q[0];
@@ -253,16 +110,16 @@ class msql{
                                 if(klo==password)
                                     {
                                     string ansver;
-                                    for(int i=0;i<20;i++)
+                                    for(int i=0;i<50;i++)
                                          ansver+=(char)(48+rand()%74);
 
                                     m_connections[hdl].name=name;
-                                    m_server.send(hdl,"{\"result\":\"true\",\"name\":\""+name+"\"}",websocketpp::frame::opcode::text);
+                                    m_server.send(hdl,"{\"result\":\"true\",\"name\":\""+name+"\",\"password\":\""+filtr(ansver)+"\"}",websocketpp::frame::opcode::text);
                                     link_db->querys("DELETE FROM user_online WHERE name=\""+filtr( name)+"\"");
                                     link_db->querys("INSERT INTO user_online(name,password) VALUES (\""+filtr(name)+"\",\""+filtr(ansver)+"\")");
                                    std::map<connection_hdl,coonntent_dat,std::owner_less<connection_hdl>>::iterator it = m_connections.begin();
                                       while(it!=m_connections.end()) {
-                                      m_server.send(it->first,"{\"name\":\""+name+"\"}",websocketpp::frame::opcode::text);
+                                          m_server.send(it->first,"{\"name\":\""+name+"\"}",websocketpp::frame::opcode::text);
                                       it++;
                                       }
 
@@ -291,6 +148,11 @@ class msql{
 
                                 string additional="WHERE name='"+filtr(name)+"'";
                                 std::vector<std::map<string,string>> q= link_db->q_select(table,fields,additional);
+                                if((q.size()>0)&&(q[0].count("error")>0)&&(q[0]["error"]=="MySQL server has gone away"))
+                                {
+                                    link_db->rebbot();
+                                    q= link_db->q_select(table,fields,additional);
+                                }
                                 if(q.size()==1)
                                 {
                                        std::map<string,string> ma =q[0];
@@ -309,6 +171,14 @@ class msql{
                 {
                     string name=pt.get<std::string>("fo_user");
                     m_server.send( get_hdl(name),msg);
+                }
+                else if(pt.count("fo_all")==1&&m_connections[hdl].name!="")
+                {
+                    std::map<connection_hdl,coonntent_dat,std::owner_less<connection_hdl>>::iterator it = m_connections.begin();
+                       while(it!=m_connections.end()) {
+                           m_server.send(it->first,msg);
+                       it++;
+                       }
                 }
 
 
@@ -372,12 +242,13 @@ class msql{
 
 };
 
+
     int main() {
         ifstream infile("date.conf");
         string pas;
         infile >> pas;
         broadcast_server server;
         server.connect_db("127.0.0.1","root",pas,"siter");
-        server.run(9001);
+        server.run(9003);
 
     }

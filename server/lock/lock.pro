@@ -3,7 +3,8 @@ TEMPLATE = app
 CONFIG += console
 CONFIG -= qt
 CONFIG   -= app_bundle
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    msql.cpp
 
 LIBS += -L/usr/local/lib -lboost_system
 LIBS += -L/usr/local/lib -lboost_regex
@@ -18,3 +19,6 @@ QMAKE_CXXFLAGS +=-D_WEBSOCKETPP_NO_CPP11_REGEX_
 QMAKE_CXXFLAGS += -std=c++0x
 CONFIG += static
 QMAKE_LFLAGS = -static
+
+HEADERS += \
+    msql.h
