@@ -54,7 +54,7 @@ $(date).find("group").each(function(index, element) {
 			var kl=$(this).find("id").text();
 		var uid=$("#user"+kl);
 		if(!uid.length&&$(this).find("name").text()!=login.name){
-    var html='<div class="konteyner" id="user'+$(this).find("id").text()+'"><a  href="#"class="lol">'+$(this).find("name").text()+'</a><div><img class="button" src="img/amblem.gif" title="присоеденится" onClick="connact.connect_p2p({user_id:\''+$(this).find("id").text()+'\',url:\''+$(this).find("URL").text()+'\',user_name:\''+$(this).find("name").text()+'\'})"><span class=" ui-icon-locked ui-icon button" title="игнорировать"  onClick="ignor(this)"></span><span class=" ui-icon-arrow-4-diag ui-icon button" onClick="clos(this)" title="закрыть"></span></div></div>';
+    var html='<div class="konteyner" id="user'+$(this).find("id").text()+'"><a  href="#"class="lol">'+$(this).find("name").text()+'</a><div><img class="button" src="img/amblem.gif" title="join" onClick="connact.connect_p2p({user_id:\''+$(this).find("id").text()+'\',url:\''+$(this).find("URL").text()+'\',user_name:\''+$(this).find("name").text()+'\'})"><span class=" ui-icon-locked ui-icon button" title="ignore"  onClick="ignor(this)"></span><span class=" ui-icon-arrow-4-diag ui-icon button" onClick="clos(this)" title="close"></span><span class=" ui-icon-comment ui-icon button"   ></span></div></div>';
 	$("#conntent1").append(html);
 				if($("#conntent1").height()>0){
 						$("#user"+$(this).find("id").text()).toggle("100");									//добавление пользователей
