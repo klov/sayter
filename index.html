@@ -1,12 +1,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Документ без названия</title>
+<title>codestream</title>
+<link rel="icon" href="img/favicon.ico" type="image/x-icon">
 <link href="style.css" rel="stylesheet" type="text/css">
  <link rel="stylesheet" href="strim.css">
  <link rel="stylesheet" href="jquery-ui-1.10.0.custom/css/custom-theme/jquery-ui-1.10.0.custom.css">
  <link href="main/MainStyl.css" rel="stylesheet" type="text/css">
-<link href="main/maincpp.css" rel="stylesheet" type="text/css">
+
 <link href="login.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="jquery.js"></script>
   <script type="text/javascript" src="jquery-ui-1.10.0.custom/js/jquery-ui-1.10.0.custom.min.js"></script>
@@ -15,9 +16,10 @@
 <script type="text/javascript" src="plagin/jquery.blockUI.js"></script>
 <script type="text/javascript" src="connect.js"></script>
 <script type="text/javascript" src="main/websockets.js" language="javascript"></script>
-<script type="text/javascript" src="main/herlcppt.js" language="javascript"></script>
+<script  type="text/javascript" src="src-noconflict/ace.js" charset="utf-8"></script>
 <script type="text/javascript" src="login.js" language="javascript"></script>
 <script type="text/javascript" src="my_h.js" language="javascript"></script>
+<script type="text/javascript" src="windows.js" language="javascript"></script>
 </head>
 <body class="body">
 <!-- ////////////////////////////////////////////////////////////////////////////////////////////////-->
@@ -35,8 +37,7 @@
 		  	  $(".kod").live("blur", function(){ 
 			    clearInterval(obd_tim)
 				});
-		 //obd_tim=setInterval("apdate()",1000);
-	var tabs= $("#tabs").tabs();
+		var tabs= $("#tabs").tabs();
 		$("input[type=button]").button();      
 		tabs.delegate( "span.ui-icon-close", "click", function() {
       var panelId = $( this ).closest( "li" ).remove().attr( "aria-controls" );
@@ -44,15 +45,12 @@
       tabs.tabs( "refresh" );
     });
     });
-	
-	
-	
-			
 	$("body>#container").draggable({ containment:"window",scroll: false, stack:"body>#container,body>#obraz",handle:".menu-window"});
-	$(".menu").draggable({ axis: "x",containment:"window",scroll: false});
+	//$(".menu").draggable({ axis: "x",containment:"window",scroll: false});
 	$("#tabs >div").live("click",function(e){
 		$(this).children("div:first").focus();
 		});
+		$("#container").hide();
 		if(getCookie("name")==undefined)
 		{
 			$.blockUI({ message: $('#login') });
@@ -82,7 +80,7 @@
 	});
 	
   </script>
-<div id="container" class="window">
+<div id="container" class="window" >
               <div class="menu-window ">
               <span class="ui-icon  ui-icon-plusthick  button" onClick=" $.blockUI({ message: $('#add_fram') });  connact.str=this" ></span>
               <span class="lol" id="my_name"></span>
@@ -94,9 +92,9 @@
     <li><a href="#home"><span>home</span></a></li>
          </ul>
   				 <div id="home" >
-                 <p>
-				<label class="lol_text" >URL сервера данных: </label>
-				<input type="text" id="url" value="ws://192.168.2.33:9002" >
+                 <p style="display:none">
+				<label class="lol_text" >URL date server: </label>
+				<input type="text" id="url" value="ws://151.248.115.227:9002" >
 				</p>
     			 </div>
    		</div>
@@ -110,7 +108,7 @@
 			<!-- люди-->
         	<div >
             <div class="shapka lol" onClick="Onanimation('conntent1',this)">
-            участники
+            user
             </div>
             <div id="conntent1"  state="0">
    			 </div>
@@ -125,31 +123,32 @@
 <!--/////////////////////////////////////////////////////////////////////////////////////////-->
 
 <!--///////////////////////////Меню диалогов////////////////////////////////////////////////-->
-<div id="add_fram" style="display:none">
-<p><label>имя нового файла:  </label><input  id="name_file" type="text">
+<div id="add_fram" class="none lol_text">
+<p class="lettering"><label>new file:  </label><input  id="name_file" type="text">
 <select size="1" id="exp">
-<option value=".cpp">.cpp</option>
-<option value=".pas">.pas</option>
-<option value=".php">.php</option>
-<option value=".cs">.cs</option>
+<option value="c_cpp">.cpp</option>
+<option value="csharp">.cs</option>
+<option value="php">.php</option>
+<option value="css">.css</option>
+<option value="javascript">.js</option>
 </select>
 </p>
 
 
 <p><input type="button" onClick="connact.dialog_clic()" class="lol_text" value="   OK   "> 
-<input type="button" onClick="$.unblockUI()"  value="отмена">
+<input type="button" onClick="$.unblockUI()"  value="Cancel">
 </p>
 </div>
 <!--////////////////////////////Вход///////////////////////////////-->
-<div id="login" style="display:none">
-<p class="lol_text"><label>введите ваше имя </label><input  id="login_name" type="text"></p>
-<p><input type="button" onClick="login.in()" value="   вход   "> </p>
+<div id="login" class="none lettering">
+<p ><label> </label></p>
+<p><a href="social_net/"><input type="button" onClick="login.in()" value="   Sign in GitHub   "> </a></p>
 </div>
 <!--/////////////////////////////////////////////////////////////////-->
-<div id="dialog_requezt" style="display:none">
+<div id="dialog_requezt" class="none lettering">
 <p><span id="requezt_user"></span></p>
-<p><input type="button" id="requezt_ok"  class="lol_text" value="   OK   "> 
-<input type="button"  id="requezt_none"  value="отмена"></p>
+<p><input type="button" id="requezt_ok"   value="   OK   "> 
+<input type="button"  id="requezt_none"  value="Cancel"></p>
 </div>
 <!--/////////////////////////////////////////////////////////////////-->
 </div>
