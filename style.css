@@ -4,11 +4,13 @@
 {
 	float:right;
 	color:#88E0FF;
+	display:inline;
 }
 .connect_status_off
 {
 	float:right;
 	color:#EA1714;
+	display:inline;
 }
 .main_area
 {
@@ -24,6 +26,9 @@
 	height:100%;
 	margin:0px;
 	background-color:#24364A;
+	-webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.8) ;
+       -moz-box-shadow: 0 0 20px rgba(0, 0, 0, 0.8) ;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8) ;
 	}
 .body
 {
@@ -69,13 +74,24 @@
 		height:15px;
 		border-width:1px;
 		border-color:#30384A;
-		margin:0px;
+		margin:2px;
+    	text-align: center;
+    	color: #fff;
+        border: 1px solid #9c9c9c; /* Запасной стиль */
+    	border: 1px solid rgba(0, 0, 0, 0.3);            
+    	text-shadow: 0 1px 0 rgba(0,0,0,0.4);
+        box-shadow: 0 0 .05em rgba(0,0,0,0.4);
+		background-color:#24364A;
+		-moz-border-radius: .3em;
+    	border-radius: .3em;
 		}
 
 	.button:active
 			{
+				position: relative;
+    			top: 1px;
 				height:15px;
-				background-color:rgba(106,90,205,0.1);
+				background-color:#13162F;
 			}
 	
 .krest

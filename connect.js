@@ -16,9 +16,10 @@ function compile(editor,aotput,typ)
 		var lins =editor.getSession().toString() ;
 		
 		$(aotput).remove(".debag-area");
-		$.post("./compilin/index.php",{file:lins,user_name:login.name,password:login.sek_key,file:lins,type:typ}, function(e){
-			
-				$(aotput).remove(".debag-area");
+		$.post("./compilin/index.php",{user_name:login.name,password:login.sek_key,file:lins,type:typ}, function(e){
+				
+				var area =$(aotput).children(".debag-area");
+				area.remove();
 				var elem = document.createElement("div");
 				$(elem).addClass("debag-area").html(e);
 				$(aotput).append(elem);
@@ -54,7 +55,7 @@ po=$(po).children(".main_area").children("div:first");
 	$(po).children("ul").append(obj);
 	if(compilin_file.indexOf($("#exp :selected").text())>=0)
 	{
-	obj='<div id="fragment-'+le+'"><div class="kod" id="'+id+'"></div><div class="debag-area"><div class="button"><span class="ui-icon ui-icon-play icon-compilin"></span><span class="lol">compilin</span><div class="none"><div></div></div>';
+	obj='<div id="fragment-'+le+'"><div class="kod" id="'+id+'"></div><div class="tab"><div class="button" id="compil_buton'+le+'"><span class="ui-icon ui-icon-play icon-compilin"></span><span class="lol">compilin</span><div class="none"><div></div></div>';
 	}else
 	{
 		obj='<div id="fragment-'+le+'"><div class="kod" id="'+id+'"></div></div></div>';
@@ -109,7 +110,8 @@ var ed = ace.edit(id);
 		
 		});
 		herf[$("#text").val()]=ed;
-		$(".tbutton").bind("click",compile(herf[$("#text").val()],$("#fragment-"+le),$("#exp :selected").text()));			
+		
+		$("#compil_buton"+le).bind("click",function(e){ compile(herf[$("#text").val()],$("#fragment-"+le),$("#exp :selected").text())});			
 ///////////////////////////////////////////////////////////////////////////////////
 		
 	 var tabs= $(po).tabs();												// удаление вкладок
@@ -170,7 +172,7 @@ var ed = ace.edit(id);
 			};
   		var str= JSON.stringify(eve);
 		out_socet.send(str);
-		//out_socet.send("<type>out<file>"+h+"<user>"+login.name);
+	
 	}
 	$.unblockUI();
 	

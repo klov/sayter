@@ -56,6 +56,32 @@ $(date).find("group").each(function(index, element) {
 		if(!uid.length&&$(this).find("name").text()!=login.name){
     var html='<div class="konteyner" id="user'+$(this).find("id").text()+'"><a  href="#"class="lol">'+$(this).find("name").text()+'</a><div><img class="button" src="img/amblem.gif" title="join" onClick="connact.connect_p2p({user_id:\''+$(this).find("id").text()+'\',url:\''+$(this).find("URL").text()+'\',user_name:\''+$(this).find("name").text()+'\'})"><span class=" ui-icon-locked ui-icon button" title="ignore"  onClick="ignor(this)"></span><span class=" ui-icon-arrow-4-diag ui-icon button" onClick="clos(this)" title="close"></span><span class=" ui-icon-comment ui-icon button"   ></span></div></div>';
 	$("#conntent1").append(html);
+	var name=$(this).find("name").text();
+	
+	$('#user'+$(this).find("id").text()+' .ui-icon-comment').on("click",function(){
+		if($("#chat").length==0){
+			if($("#chat"+name).length==0){
+				var divo =document.createElement("div");
+				$(divo).append('<div class="text_area"></div>')
+				var input_tag=document.createElement("textarea");
+				$(input_tag).keypress(function(e){
+					if(e.keyCode==13){
+						var txt =$(this).val();
+						var convas =$(this).parent().children(".text_area");
+						$(this).val("");
+						}
+					});
+					$(input_tag).css("max-height","35px");
+					$(input_tag).css("max-width","164px");
+					$(input_tag).css("min-width","164px");
+					$(input_tag).css("width","100%");
+					$(divo).append(input_tag);
+					var key ="#chat"+name;
+				$("body").createtabs({chat:{key:name}},{frame:"",wind:"wind"},divo);
+				}else{
+					}
+			}
+		});
 				if($("#conntent1").height()>0){
 						$("#user"+$(this).find("id").text()).toggle("100");									//добавление пользователей
 						}

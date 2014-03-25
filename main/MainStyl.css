@@ -35,7 +35,9 @@
 	}
 	
 .debag-area{
-	height:40px;
+	overflow:scroll;
+	min-height:40px;
+	max-height:75px;
 	padding:8px;
 	padding-left:10px;
 	-moz-border-radius: .2em;
@@ -44,7 +46,12 @@
 		border-color:#30384A;
 		border-style:ridge;		
 	}
+.tab{
+	height:40px;
 	
+	padding:8px;
+	padding-left:10px;
+	}
 	
 	
 	.none{

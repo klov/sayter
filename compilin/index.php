@@ -1,7 +1,7 @@
   ﻿<?php
 
-
-include_once("./connect_db.php");
+$mas_type =array();
+include_once("../php_script/connect_db.php");
 		$name = strip_tags($_POST["user_name"]);
 		$name = htmlspecialchars($name);
 		$name = mysql_escape_string($name);
@@ -14,10 +14,8 @@ include_once("./connect_db.php");
 		$qure ="SELECT * FROM user_online WHERE name LIKE '".$name."' AND password LIKE '".$pas."'";
 	
 		$result = mysql_query($qure,$db) or die("error select");
-	
 		if(mysql_num_rows($result)>0)
 		{
-		
 			$name_file=uniqid("").$_POST["type"];
 
 			$name_file="./".$name."/".$name_file;
@@ -28,12 +26,12 @@ include_once("./connect_db.php");
 			$fp = fopen($name_file,"w+");
 			if(fwrite($fp,$_POST["file"])&&($_POST["type"]==".cpp"))
 			{
-			$qure = "gcc ".$name_file." -Wall -lstdc++ -o ".$dir_name."/out  2>&1";
+			$qure = "gcc ".$name_file."  -lstdc++ -o ".$dir_name."/out  2>&1";
 			exec($qure,$output,$ret_val);
 			if($ret_val)
 				{	
 					foreach($output as $val)
-					$ansver.=$val."<br>";
+					$ansver.=str_replace($name_file," ",$val)."<br>";
 					
 					echo $ansver;
 				} else
