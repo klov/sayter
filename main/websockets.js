@@ -145,6 +145,32 @@ function send_date()
 function finel_state_socet(e)
 {
 			var cat =JSON.parse(e.data);
+			if(('type' in cat)&&(cat.type=="chat_message")){
+				var name=cat.from_user;
+				
+				if($("#chat").length==0){
+					var ob ={chat:{}};
+					ob.chat["chat"+name]=name
+					
+					var divo =chat_tools(name);
+						$("body").createtabs(ob,{frame:"text",wind:"wind"},divo);
+					var tag = $("#chat"+name+"  .text_area");
+					tag.append('<div><b>'+name+'</b> : '+cat.date+'<div>');
+					}
+				if($("#chat"+name).length==0){
+				var divo =chat_tools(name);
+				var key={};
+				key["#chat"+name]=name;
+				$("#chat").addtabs(key,divo);
+				var tag = $("#chat"+name+"  .text_area");
+					tag.append('<div><b>'+name+'</b> : '+cat.date+'<div>');
+				}else{
+					var tag = $("#chat"+name+"  .text_area");
+					tag.append('<div><b>'+name+'</b> : '+cat.date+'<div>');
+				}
+			
+			
+				}else
 			if(('result' in cat)&&(cat.result==true))
 					{
 						$("#my_name").val(cat.user).css("visibility","visible");
