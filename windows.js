@@ -1,24 +1,26 @@
 // JavaScript Document
 (function($){
+	
 	$.fn.addtabs=function(id_tag,tag_html){
-		for(key in mass){
-	var obj='<li><a href="#'+key.replace(/\./g,"_")+'"><span>'+mass[key]+'</span></a><span class="ui-icon ui-icon-close krest" role="presentation"></span></li>';
+		for(key in id_tag){
+	var obj='<li><a href="#'+key.replace(/\./g,"_")+'"><span>'+id_tag[key]+'</span></a><span class="ui-icon ui-icon-close krest" role="presentation"></span></li>';
 	
 							this.children("ul").append(obj);
-							obj='<div  id="'+id_tag.replace(/\./g,"_")+'" ></div>';
+							obj='<div  id="'+key.replace(/\./g,"_")+'" ></div>';
 							this.append(obj);
+							
 							this.tabs( "refresh" );
-	var yui =$(this+" .ui-icon-close");
-	$(this+" .ui-icon-close").on("click",function(){
+							
+	$('a[href="#'+key.replace(/\./g,"_")+'"]').parent().children(".ui-icon-close").on("click",function(){
 		var id=$(this).parent().children("a").attr("href")
 		$(this).parent().remove();
 		$(id).remove();
 		});
-		$(id_tag.replace(/\./g,"_")).css("margin",0);
-		$(id_tag.replace(/\./g,"_")).css("padding",0);
-		if (tag_html!=undefin)
+		$("#"+key.replace(/\./g,"_")).css("margin",0);
+		$("#"+key.replace(/\./g,"_")).css("padding",0);
+		if (tag_html!=undefined)
 		{
-			$(id_tag.replace(/\./g,"_")).append(tag_html);
+			$("#"+key.replace(/\./g,"_")).append(tag_html);
 		}
 		}
 			};
@@ -148,3 +150,30 @@ function polymorph() {
     return len2func[arguments.length].apply(this, arguments);
   }
 }
+function chat_tools(name){
+var divo =document.createElement("div");
+				$(divo).append('<div class="text_area"></div>')
+				var input_tag=document.createElement("textarea");
+				$(input_tag).keypress(function(e){
+					if(e.keyCode==13){
+						var txt =$(this).val();
+						var convas =$(this).parent().children(".text_area");
+						 var eve ={
+							from_user:getCookie("name"),
+							fo_user:name,
+							type:"chat_message",
+							date:txt
+						};
+						var t= JSON.stringify(eve);
+						menu_socet.send(t);
+						$(convas).append('<div><b>'+login.name+'</b> : '+txt+'<div>');
+						$(this).val("");
+						}
+					});
+					$(input_tag).css("max-height","35px");
+					$(input_tag).css("max-width","164px");
+					$(input_tag).css("min-width","164px");
+					$(input_tag).css("width","100%");
+					$(divo).append(input_tag);
+					return divo;
+	}
