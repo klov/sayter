@@ -53,7 +53,7 @@ login.in = function()
 			
 		} else
 		{
-			alert("такой пользователь уже есть");
+			alert("a user already exists");
 		}
 	}
 	});
