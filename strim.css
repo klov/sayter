@@ -74,10 +74,14 @@
 
 	}
 	.text_area{
-			
+		overflow:auto;
+			word-wrap: break-word;
 		margin:2px;
 		padding:0px;
 		height:100%;
 		width:100%;
 		background-color:#FFF;
+		
 		}
+		
+	
