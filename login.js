@@ -36,6 +36,12 @@ login.in = function()
 			document.cookie="key="+val+"; expires="+date.toUTCString();
 			
 			menu_socet = Socet(adres_name);
+			menu_socet.onerror = function(error) {
+
+  alert("error " + error.message);
+
+};
+
 			menu_socet.onclose =function(e)
 			{
 			//	$.blockUI({ message: $('#login') });
@@ -63,6 +69,7 @@ login.in = function()
 	
 login.begin=function(e)
 {
+	console.log(e.data);
 var cat =JSON.parse(e.data);
 						var k =cat.key;
 						var s=cat.salte;
@@ -79,15 +86,19 @@ var cat =JSON.parse(e.data);
 							menu_socet.onmessage = function(e)
 							{
 							var cat =JSON.parse(e.data);
+							console.log(cat);
 							if(('result' in cat)&&(cat.result=='true'))
 							{
-								$.unblockUI();
+								//$.unblockUI();
 								$("#my_name").val(cat.user).css("visibility","visible");
 								$("#my_name").text(getCookie("name"));
 								$("#container").show();
 			login.name= getCookie("name");
 			login.sek_key=cat.password;
-			menu_socet.onmessage = finel_state_socet;
+			
+			menu_socet.onmessage = function(e){ 
+			finel_state_socet(e);
+			}
 								
 							}
 							
@@ -95,3 +106,97 @@ var cat =JSON.parse(e.data);
 							menu_socet.send(str);		
 					
 			}
+/*обработчик меню сокета после подключения к серверу*/
+function finel_state_socet(e)
+{
+			var cat =JSON.parse(e.data);
+			if(('type' in cat)&&(cat.type=="chat_message")){
+				var name=cat.from_user;
+				
+				if($("#chat").length==0){
+					var ob ={chat:{}};
+					ob.chat["chat"+name]=name
+					
+					var divo =chat_tools(name);
+						$("body").createtabs(ob,{frame:"text",wind:"wind"},divo);
+					
+					}
+				if($("#chat"+name).length==0){
+				var divo =chat_tools(name);
+				var key={};
+				key["chat"+name]=name;
+				$("#chat").addtabs(key,divo);
+				var tag = $("#chat"+name+"  .text_area");
+					tag.append('<div><b>'+name+'</b> : '+cat.date+'<div>');
+				}else{
+					var tag = $("#chat"+name+"  .text_area");
+					tag.append('<div><b>'+name+'</b> : '+cat.date+'<div>');
+				}
+			
+			
+				}else
+			if(('result' in cat)&&(cat.result==true))
+					{
+						$("#my_name").val(cat.user).css("visibility","visible");
+					}
+			else if('name' in cat)
+					{
+						apdate();
+					}
+						
+			else if(('ask' in cat)&&(cat.ask=='get_connect'))
+					{
+						if($("div.kod").length==0){										// oтвет при аустом проекте
+							var eve ={
+							from_user:getCookie("name"),
+							fo_user:cat.from_user,
+							ask:'not_file'
+						};
+						var str= JSON.stringify(eve);
+						menu_socet.send(str);
+							}
+							else{
+						$("#requezt_user").text("user "+cat.from_user+" wants to connect ");
+						$.blockUI({ message: $('#dialog_requezt') });
+						$("#requezt_ok").bind("click",function(e){
+						var date= new Array();
+						$("div.kod").each(function(index, element) {
+                        date.push($(this).attr("id").replace(/_/g,"."));
+                        });
+						var eve ={
+							from_user:getCookie("name"),
+							fo_user:cat.from_user,
+							ask:'yes_give',
+							table:date,
+							adres:$("#url").val(),
+							acsses_key:login.secrid_code
+						};
+						var str= JSON.stringify(eve);
+						menu_socet.send(str);
+						$.unblockUI();
+						});
+						$("#requezt_none").bind("click",function(e){
+						var eve ={
+						from_user:getCookie("name"),
+						fo_user:cat.from_user,
+						ask:'not_give'
+						};
+						var str= JSON.stringify(eve);
+									menu_socet.send(str);
+									$.unblockUI();
+									});	
+							}
+			}
+			else if(('ask' in cat)&&(cat.ask=='yes_give'))
+					{
+						connact.add_new_users(cat);
+					}
+			else if(('ask' in cat)&&(cat.ask=='not_give'))
+			{
+				alert("user "+cat.from_user+" rejected the proposal");
+			}else if(('ask' in cat)&&(cat.ask=='not_file'))
+			{
+				alert(cat.from_user+" user has no active files");
+			}
+							
+}
