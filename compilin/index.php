@@ -80,7 +80,6 @@ function remove_dir($path)
 			}
 		}
 		closedir($dirHandle);
-		
 		if(file_exists($path))
 		{
 			rmdir($path);
