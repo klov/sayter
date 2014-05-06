@@ -55,23 +55,26 @@ po=$(po).children(".main_area").children("div:first");
 	$(po).children("ul").append(obj);
 	if(compilin_file.indexOf($("#exp :selected").text())>=0)
 	{
-	obj='<div id="fragment-'+le+'"><div class="kod" id="'+id+'"></div><div class="tab"><div class="button" id="compil_buton'+le+'"><span class="ui-icon ui-icon-play icon-compilin"></span><span class="lol">compilin</span><div class="none"><div></div></div>';
+	obj='<div id="fragment-'+le+'" ><div class="kod" id="'+id+'"></div><div class="tab"><div class="button" id="compil_buton'+le+'"><span class="ui-icon ui-icon-play icon-compilin"></span><span class="lol">compilin</span><div class="none"><div></div></div>';
 	}else
 	{
-		obj='<div id="fragment-'+le+'"><div class="kod" id="'+id+'"></div></div></div>';
+		obj='<div id="fragment-'+le+'" ><div class="kod" id="'+id+'"></div></div></div>';
 	}
 	
 				
 	$(po).append(obj);
 	$(po).tabs( "refresh" );
+	
 ////////////////////////////////////подключение подсветки ace//////////////////////
 var ed = ace.edit(id);
 	ed.name=id;
     ed.setTheme("ace/theme/eclipse");
+	$("#fragment-"+le).css("padding",0);
 	var str ="ace/mode/"+$("#exp :selected").val();
+	
     ed.getSession().setMode(str);
 	ed.on("change",function(e,edit){
-		var re =e.data;
+				var re =e.data;
 		var lins =edit.getSession().getDocument().getAllLines();
 		
 		if(("action" in re)&&re.action=="removeLines")
@@ -151,7 +154,8 @@ var ed = ace.edit(id);
 					type:"out",
 					file:h,
 					user:login.name,
-					password:login.secrid_code
+					password:login.secrid_code,
+					key:login.sek_key
 				};
   				var str= JSON.stringify(eve);
 				this.send(str);
@@ -204,7 +208,7 @@ var ed = ace.edit(id);
 	}
 
 
-
+// добавляет нового пользователя на экран
 	
 	connact.add_new_users =function(param)
 	{
@@ -228,7 +232,7 @@ var ed = ace.edit(id);
 	};
 	var str= JSON.stringify(eve);
 	in_socet[param.from_user].send(str);
-		//in_socet[param.from_user].send("<type>in<file><user>"+param.from_user);
+	
 		for(var i=0; i<param.table.length;i++){
 				 
 				 var kl=param.table[i];
@@ -236,9 +240,12 @@ var ed = ace.edit(id);
 				div+='<div  id="'+param.table[i].replace(/\./,"_")+param.from_user+'" ><div class="frame"></div></div>';
 				
 		}
-		 var po='<div id="container" class="window"><div class="menu-window "><span class="ui-icon ui-icon-circle-close button " title="выход"></span></div><div id="'+param.from_user+'"><ul>'+li+'</ul>'+div+'</div>';
+		 var po='<div id="container" class="window"><div class="menu-window "><span class="ui-icon ui-icon-circle-close button " title="выход"></span></div><div id="'+param.from_user+'"><ul>'+li+'</ul>'+div+'</div></div>';
 	$(".menu").after(po);
-	
+	var plk=$("#"+param.from_user).parent().children(".menu-window").children(".ui-icon-circle-close").on("click",function(){
+			$(this).parent().parent().remove();
+			delete in_socet[param.from_user];
+			});
 	$("body>#container").draggable({ containment:"window",scroll: false, stack:"body>#container",handle:".menu-window"});
 	 var tabs= $("#"+param.from_user).tabs();												// удаление вкладок
 	 tabs.delegate( "span.ui-icon-close", "click", function() {
@@ -257,7 +264,7 @@ var ed = ace.edit(id);
 		
 			var s =e.data;
 					
-			var mas_date = JSON.parse(s);   //.split(/<user>|<date>|<numbe>|<length>|<file>/);
+			var mas_date = JSON.parse(s);   
 			if('date' in mas_date){			
 			var div=$("#"+mas_date.file+mas_date.user).children(".fram");
 			if(div.children("div").length!=mas_date.len)
@@ -273,7 +280,7 @@ var ed = ace.edit(id);
 			var y=$("#"+mas_date.file+mas_date.user).children(".frame").children("div:eq("+mas_date.numbe+")");
 			y.text(mas_date.date);
 			} else if('type' in mas_date){
-					//var mas_date = s.split(/<type>|<file>|<user>/);
+					
 					if(mas_date.type=="out")
 					{
 				
