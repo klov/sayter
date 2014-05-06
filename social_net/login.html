@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>codestream</title>
+<link rel="shortcut icon" href="../img/favicon.ico" type="image/x-icon" >
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="../jquery-ui-1.10.0.custom/css/custom-theme/jquery-ui-1.10.0.custom.css">
+<link rel="stylesheet" href="../strim.css">
+<script type="text/javascript" src="../jquery.js"></script>
+  <script type="text/javascript" src="../jquery-ui-1.10.0.custom/js/jquery-ui-1.10.0.custom.min.js"></script>
+  <script type="text/javascript" src="../plagin/jquery.blockUI.js"></script>
+  
+</head>
+
+<body>
+<script type="text/javascript" >
+function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
+}
+
+function login(){
+	var us_name =$("#login_name").val();
+	$("#my_name").text(us_name);
+	$("#login").val("");
+	var XHRcon= $.ajax({
+		url:"user_chek.php?name="+us_name+"&id="+getUrlVars()["id"],
+		 type:"GET",
+		 dataType:"xml",
+	error:function(e){
+		console.log(e);
+		var val =$(e.responseText).find("ansver");
+		val=val.text();
+		if (val!=0){}
+		},
+	success:function (e)
+	{
+		var val =$(e).find("ansver");
+		val=val.text();
+		if (val!=0)
+		{
+			var date = new Date;
+			date.setYear(3040);
+		document.cookie="name="+us_name+"; path=/; expires="+date.toUTCString();
+	
+			document.cookie="key="+val+"; path=/; expires="+date.toUTCString();
+			document.location="http://codestream.us";
+		  }
+		  else
+		  {
+			  alert("name busy");
+		  }
+	   }
+	   });
+	}
+	
+$(function(){
+	$(document).ready(function(e) {
+		$("input[type=button]").button();
+        $.blockUI({ message: $('#login') });
+    });});
+</script>
+<div id="login" style="display:none">
+<p class="lettering"><label>enter your nickname </label><input  id="login_name" type="text"></p>
+<p><input type="button" onClick="login()" value="   enter   "> </p>
+</div>
+</body>
+</html>
