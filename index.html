@@ -20,6 +20,7 @@
 <script type="text/javascript" src="login.js" language="javascript"></script>
 <script type="text/javascript" src="my_h.js" language="javascript"></script>
 <script type="text/javascript" src="windows.js" language="javascript"></script>
+
 </head>
 <body class="body">
 <!-- ////////////////////////////////////////////////////////////////////////////////////////////////-->
@@ -30,6 +31,7 @@
   $(function() {
 	
 	  $(document).ready(function(e) {
+		  
 		  var timerId = setInterval(apdate(),2000);
 		login.secrid_code=generet_string();
 		  $(".kod").live("focus", function(){ 
@@ -47,7 +49,7 @@
     });
     });
 	$("body>#container").draggable({ containment:"window",scroll: false, stack:"body>#container,body>#obraz",handle:".menu-window"});
-	//$(".menu").draggable({ axis: "x",containment:"window",scroll: false});
+
 	$("#tabs >div").live("click",function(e){
 		$(this).children("div:first").focus();
 		});
@@ -76,8 +78,33 @@
 			
 			}
 			
-		 
-		
+		 $(".menu .ui-icon-comment").on("click",function(){
+			if($("#chat").length==0){
+					var ob ={chat:{}};
+					ob.chat["chatall"]="all";
+					var divo =chat_tools("all");
+					$("body").createtabs(ob,{frame:"text",wind:"wind"},divo);
+					}
+				if($("#chatall").length==0){
+				var divo =chat_tools(name);
+				var key={};
+				key["chatall"]="all";
+				$("#chat").addtabs(key,divo);
+				
+				}
+				});
+				
+				$(".menu .ui-icon-refresh").on("click",function(e){
+			apdate();
+			e.stopPropagation();
+				});
+				
+				$("#exit").on("click",function(e){
+					document.cookie="name='';expires=-1";
+					document.cookie="key='';expires=-1";
+					document.location.reload();
+					});
+				
 	});
 	
   </script>
@@ -109,7 +136,9 @@
 			<!-- люди-->
         	<div >
             <div class="shapka lol" onClick="Onanimation('conntent1',this)">
-            user
+            <span>user</span>
+            <span class="ui-icon  ui-icon-refresh  button" ></span>
+             <span class="ui-icon  ui-icon-comment  button" ></span>
             </div>
             <div id="conntent1"  state="0">
    			 </div>
@@ -155,6 +184,10 @@
 </div>
 
 <!--/////////////////////////////////////////////////////////////////////-->
-
+<div id="footer">
+	<div>
+    </div>
+    <input type="button" value="exit"  id="exit" style="float:right; margin:10px">
+</div>
 </body>
 </html>
