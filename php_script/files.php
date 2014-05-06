@@ -9,6 +9,7 @@ if(isset($_GET['close'])&&isset($_GET['file'])&&isset($_GET['user_name']))
 		$qure ="SELECT id FROM user_online WHERE name LIKE '".$input_text."'";
 	
 		$result = mysql_query($qure,$db) or die("error select");
+		
 		if(mysql_num_rows($result)>0)
 		{
 			$myrow=mysql_fetch_array($result);

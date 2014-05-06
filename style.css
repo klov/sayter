@@ -37,7 +37,7 @@
 .shapka
 {
 	
-	margin:0px;
+	
 	background-color:#1E2E3E;
 	font-size:12px;
 	font-family:Tahoma, Geneva, sans-serif;
@@ -115,6 +115,7 @@
 	height:200px;
 		width:600px;
 }
-#tabs div{
+/*#tabs div{
 	padding:0px;
-	}
+	}*/
+	
