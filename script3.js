@@ -70,7 +70,7 @@ $(date).find("group").each(function(index, element) {
 				if($("#chat"+name).length==0){
 				var divo =chat_tools(name);
 				var key={};
-				key["#chat"+name]=name;
+				key["chat"+name]=name;
 				$("#chat").addtabs(key,divo);
 				
 				}
