@@ -12,17 +12,65 @@ var connact =new Object()
  connact.pm="";
 function compile(editor,aotput,typ)
 {
-	
-		var lins =editor.getSession().toString() ;
-		
-		$(aotput).remove(".debag-area");
-		$.post("./compilin/index.php",{user_name:login.name,password:login.sek_key,file:lins,type:typ}, function(e){
+		var klt= $(aotput).children(".debag-area");
+				$(".debag-area").remove();
+				var list = document.createElement("div");
+				$(list).addClass("debag-area");
+				for(var key in herf)
+				{
+					
+					$(list).append('<input type="checkbox" name="'+key.replace(/\./g,"_")+'" value="'+key+'"> '+key);
+				}
+				var tag=document.createElement("div");
+				var str='<div class="button" id="compil"><span class="ui-icon ui-icon-play icon-compilin"></span><span class="lol">Start</span><div class="none"><div><br><hr>';
+				for(var key in in_socet)
+				{
+					
+					$(list).append("<hr>");
+					$(list).append(key+"<br>");
+					$("#"+key+" li a ").each(function(index, element) {
+						
+						var str='<input type="checkbox" name="'+$(this).attr("href")+'" value="'+$(this).attr("href")+'"> '+$(this).children("span").text();
+                      	$(list).append(str);  
+                    });
 				
+				}
+				$(tag).html(str);
+				$(list).append(tag);
+				$(aotput).append(list);
+				$("input[name="+editor.name+"]").attr("checked",true);
+				$(tag).bind("click",function(e){
+					var names= Array();
+					var values=Array();
+					for(var key in herf)
+					{
+						if($("input[name='"+key.replace(/\./g,"_")+"']").prop("checked"))
+						{
+							names.push(key);
+							values.push(herf[key].getSession().toString());
+						}
+					}
+					
+					for(var key in in_socet)
+				{
+						$("#"+key+" li a ").each(function(index, element) {
+							if($("input[name='"+$(this).attr("href")+"']").prop("checked"))
+							{
+								names.push($(this).children("span").text());
+								values.push($($(this).attr("href")).text());
+							}
+						
+                      	$(list).append(str);  
+                    });
+				
+				}
+		$.post("./compilin/index.php",{user_name:login.name,password:login.sek_key,"file_name[]":names,"file_content[]":values,type:typ}, function(e){
 				var area =$(aotput).children(".debag-area");
 				area.remove();
 				var elem = document.createElement("div");
 				$(elem).addClass("debag-area").html(e);
 				$(aotput).append(elem);
+				});
 				});
 }
 
@@ -55,7 +103,7 @@ po=$(po).children(".main_area").children("div:first");
 	$(po).children("ul").append(obj);
 	if(compilin_file.indexOf($("#exp :selected").text())>=0)
 	{
-	obj='<div id="fragment-'+le+'" ><div class="kod" id="'+id+'"></div><div class="tab"><div class="button" id="compil_buton'+le+'"><span class="ui-icon ui-icon-play icon-compilin"></span><span class="lol">compilin</span><div class="none"><div></div></div>';
+	obj='<div id="fragment-'+le+'" ><div class="kod" id="'+id+'"></div><div class="tab"><div class="button" id="compil_buton'+le+'"><span class="ui-icon ui-icon-play icon-compilin"></span><span class="lol">Compile</span><div class="none"><div></div></div>';
 	}else
 	{
 		obj='<div id="fragment-'+le+'" ><div class="kod" id="'+id+'"></div></div></div>';
@@ -112,9 +160,10 @@ var ed = ace.edit(id);
 		}
 		
 		});
-		herf[$("#text").val()]=ed;
 		
-		$("#compil_buton"+le).bind("click",function(e){ compile(herf[$("#text").val()],$("#fragment-"+le),$("#exp :selected").text())});			
+		herf[h]=ed;
+		
+		$("#compil_buton"+le).bind("click",function(e){ compile(herf[h],$("#fragment-"+le),$("#exp :selected").text())});			
 ///////////////////////////////////////////////////////////////////////////////////
 		
 	 var tabs= $(po).tabs();												// удаление вкладок
