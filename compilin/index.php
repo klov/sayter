@@ -16,41 +16,38 @@ include_once("../php_script/connect_db.php");
 		$result = mysql_query($qure,$db) or die("error select");
 		if(mysql_num_rows($result)>0)
 		{
-			$name_file=uniqid("").$_POST["type"];
-
-			$name_file="./".$name."/".$name_file;
-			$dir_name="./".$name;
+			$dir_name="./".uniqid("");
 			
 			if(mkdir($dir_name,0777,true))
 			{
-			$fp = fopen($name_file,"w+");
-			if(fwrite($fp,$_POST["file"])&&($_POST["type"]==".cpp"))
-			{
-			$qure = "gcc ".$name_file."  -lstdc++ -o ".$dir_name."/out  2>&1";
-			exec($qure,$output,$ret_val);
-			if($ret_val)
-				{	
-					foreach($output as $val)
-					$ansver.=str_replace($name_file," ",$val)."<br>";
-					
-					echo $ansver;
-				} else
-				{
-					
-					echo "compilation is successful";
-					
-				}
-		}
-		fclose($fp);
-
+				for($i=0;$i<count($_POST["file_name"]);$i++)
+					{	
+						$fp = fopen($dir_name."/".$_POST['file_name'][$i],"w+");
+						fwrite($fp,$_POST['file_content'][$i]);
+						fclose($fp);
+					}
+							
+								$qure=creator($_POST["type"],$_POST['file_name'],$dir_name);
+								echo $qure;								
+								exec($qure,$output,$ret_val);
+							if($ret_val)
+							{	
+								foreach($output as $val)
+								$ansver.=str_replace($name_file," ",$val)."<br>";
+								echo $ansver;
+							} else
+							{
+								echo "compilation is successful";
+							}
+			}
 if(is_dir($dir_name))
 		{
-
-		remove_dir($dir_name);
+		
+		//remove_dir($dir_name);
 				
 		}
 		}
-		}
+		
 		}
 		
 		
@@ -87,4 +84,18 @@ function remove_dir($path)
 	}
 	
 } 
+
+function creator($type,$name_files,$dr)
+{
+	
+	if($type==".cpp")
+	{
+
+		$qure="gcc ";
+	for($i=0;$i<count($name_files);$i++)
+	$qure.=$dr."/".$name_files[$i]." ";
+	$qure .="  -lstdc++ -o ".$dr."/out  2>&1";
+	}
+	return $qure;
+}
 ?>
