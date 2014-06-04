@@ -28,7 +28,7 @@ include_once("../php_script/connect_db.php");
 					}
 							
 								$qure=creator($_POST["type"],$_POST['file_name'],$dir_name);
-								echo $qure;								
+							
 								exec($qure,$output,$ret_val);
 							if($ret_val)
 							{	
@@ -43,7 +43,7 @@ include_once("../php_script/connect_db.php");
 if(is_dir($dir_name))
 		{
 		
-		//remove_dir($dir_name);
+		remove_dir($dir_name);
 				
 		}
 		}
