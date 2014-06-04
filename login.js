@@ -160,9 +160,20 @@ function finel_state_socet(e)
 						$.blockUI({ message: $('#dialog_requezt') });
 						$("#requezt_ok").bind("click",function(e){
 						var date= new Array();
-						$("div.kod").each(function(index, element) {
-                        date.push($(this).attr("id").replace(/_/g,"."));
-                        });
+						for(var key in herf)
+						{
+							var line_s=[];
+							for(var i=0;i<herf[key].getSession().getLength();i++)
+								{
+									
+									line_s.push(herf[key].getSession().getLine(i));
+									
+								}
+								var tyu={};
+								tyu[key]=line_s;
+								date.push(tyu);
+						}
+						
 						var eve ={
 							from_user:getCookie("name"),
 							fo_user:cat.from_user,
