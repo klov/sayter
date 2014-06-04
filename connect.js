@@ -55,15 +55,29 @@ function compile(editor,aotput,typ)
 				{
 						$("#"+key+" li a ").each(function(index, element) {
 							if($("input[name='"+$(this).attr("href")+"']").prop("checked"))
-							{
+							{	
+								var text_s="";
+								$($(this).attr("href")).children(".frame").children("div").each(function(index, element) {
+                                text_s+=$(this).text()+"\n ";    
+                                });;
+								
 								names.push($(this).children("span").text());
-								values.push($($(this).attr("href")).text());
+								values.push(text_s);
 							}
 						
                       	$(list).append(str);  
                     });
 				
 				}
+				
+				$.ajax({
+   type: "POST",
+   url: "./compilin/index.php",
+   data: "name=John&location=Boston",
+   success: function(msg){
+     alert( "Data Saved: " + msg );
+   }
+ });
 		$.post("./compilin/index.php",{user_name:login.name,password:login.sek_key,"file_name[]":names,"file_content[]":values,type:typ}, function(e){
 				var area =$(aotput).children(".debag-area");
 				area.remove();
@@ -115,6 +129,7 @@ po=$(po).children(".main_area").children("div:first");
 	
 ////////////////////////////////////подключение подсветки ace//////////////////////
 var ed = ace.edit(id);
+	ed.number=0;
 	ed.name=id;
     ed.setTheme("ace/theme/eclipse");
 	$("#fragment-"+le).css("padding",0);
@@ -125,37 +140,42 @@ var ed = ace.edit(id);
 				var re =e.data;
 		var lins =edit.getSession().getDocument().getAllLines();
 		
-		if(("action" in re)&&re.action=="removeLines")
+		if(("action" in re)&&(re.action=="removeLines"||re.action=="insertLines"))
 		{
-				for(var i=0;i<re.lines.length;i++)
+			
+				for(var i=0;i<edit.getSession().getLength();i++)
 				{
 					var link={};
-			link["numbe"]=i;
-			link["len"]=lins.length;
-			link["text"]=lins[i];
-			link["id"]=edit.name;
-			send(link);
+					link["numbe"]=i;
+					link["len"]=edit.getSession().getLength();
+					link["text"]=edit.getSession().getLine(i);
+					link["id"]=edit.name;
+					send(link);
+				
+				}
+				
+		}else if (("action" in re)&&(re.text.charCodeAt(0)==13))
+		{
+			for(var i=0;i<edit.getSession().getLength();i++)
+				{
+					var link={};
+					link["numbe"]=i;
+					link["len"]=edit.getSession().getLength();
+					link["text"]=edit.getSession().getLine(i);
+					link["id"]=edit.name;
+					send(link);
+				
 				}
 		}
-		else if(("action" in re)&&re.action=="insertLines")
-		{
-			for(var i=0;i<re.lines.length;i++)
-				{
-					var link={};
-			link["numbe"]=re.range.start.row+i;
-			link["len"]=lins.length;
-			link["text"]=lins[re.range.start.row+i];
-			link["id"]=edit.name;
-			send(link);
-				}
-		}	
 		else if(("action" in re)&&(re.action=="insertText")||(re.action=="removeText"))
 		{
+			
 			var link={};
 			link["numbe"]=re.range.start.row;
 			link["len"]=lins.length;
 			link["text"]=lins[re.range.start.row];
 			link["id"]=edit.name;
+			
 			send(link);
 		}
 		
@@ -185,7 +205,7 @@ var ed = ace.edit(id);
 		"&close=true",
 		 type:"GET",
 		 });
-		 $( "#" + panelI ).remove();
+		 delete herf[name_file];
       	 tabs.tabs( "refresh" );
     });
 	
@@ -282,15 +302,27 @@ var ed = ace.edit(id);
 	var str= JSON.stringify(eve);
 	in_socet[param.from_user].send(str);
 	
-		for(var i=0; i<param.table.length;i++){
+		for(var j in param.table){
+		for(var i in param.table[j]){
 				 
-				 var kl=param.table[i];
-				li+='<li><a href="#'+param.table[i].replace(/\./,"_")+param.from_user+'"><span>'+param.table[i].replace(/_/,".")+'</span></a><span class="ui-icon ui-icon-close krest" role="presentation"></span></li>';
-				div+='<div  id="'+param.table[i].replace(/\./,"_")+param.from_user+'" ><div class="frame"></div></div>';
 				
+				
+				li+='<li><a href="#'+i.replace(/\./,"_")+param.from_user+'"><span>'+i.replace(/_/,".")+'</span></a><span class="ui-icon ui-icon-close krest" role="presentation"></span></li>';
+				
+				div+='<div  id="'+i.replace(/\./,"_")+param.from_user+'" ><div class="frame"></div></div>';
 		}
-		 var po='<div id="container" class="window"><div class="menu-window "><span class="ui-icon ui-icon-circle-close button " title="выход"></span></div><div id="'+param.from_user+'"><ul>'+li+'</ul>'+div+'</div></div>';
+							
+		}
+		var po='<div id="container" class="window"><div class="menu-window "><span class="ui-icon ui-icon-circle-close button " title="выход"></span></div><div id="'+param.from_user+'"><ul>'+li+'</ul>'+div+'</div></div>';
 	$(".menu").after(po);
+		
+		for(var j in param.table)
+		for(var i in param.table[j])
+		for(var k in param.table[j][i]){
+		
+		$("#"+i.replace(/\./,"_")+param.from_user).children(".frame").append($(document.createElement("div")).css("height","14px").text(param.table[j][i][k]));
+		}	
+		
 	var plk=$("#"+param.from_user).parent().children(".menu-window").children(".ui-icon-circle-close").on("click",function(){
 			$(this).parent().parent().remove();
 			delete in_socet[param.from_user];
@@ -315,14 +347,14 @@ var ed = ace.edit(id);
 					
 			var mas_date = JSON.parse(s);   
 			if('date' in mas_date){			
-			var div=$("#"+mas_date.file+mas_date.user).children(".fram");
+			var div=$("#"+mas_date.file+mas_date.user).children(".frame");
 			if(div.children("div").length!=mas_date.len)
 			{
 				
 				for(var i=0;i<mas_date.len-div.length; i++)
 				{
 					var tr=$("#"+mas_date.file+mas_date.user).children(".frame");
-					$("#"+mas_date.file+mas_date.user).children(".frame").append("<div></div>");
+					$("#"+mas_date.file+mas_date.user).children(".frame").append("<div style=\"height:14px\"></div>");
 			
 				}
 			}
