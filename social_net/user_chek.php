@@ -52,7 +52,7 @@ header ('Content-Type: application/xml; charset=UTF-8');
 					$h_key  =md5($key.$salt); 		
 				
 		
-					$qure='UPDATE user SET name="'.$input_name.'",URL_adres="'.$input_ip.'",key_h="'.$h_key.'",salt="'.$salt.'" WHERE hub_id='.$input_id ;
+					$qure='UPDATE user SET name="'.$input_name.'",key_h="'.$h_key.'",salt="'.$salt.'" WHERE hub_id='.$input_id ;
 					
 					$result = mysql_query($qure,$db) or die("error insert");
 					$answer="<ansver>".$key."</ansver>";
