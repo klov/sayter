@@ -106,7 +106,7 @@ var cat =JSON.parse(e.data);
 							menu_socet.send(str);		
 					
 			}
-/*обработчик меню сокета после подключения к серверу*/
+			
 function finel_state_socet(e)
 {
 			var cat =JSON.parse(e.data);
@@ -153,27 +153,16 @@ function finel_state_socet(e)
 							ask:'not_file'
 						};
 						var str= JSON.stringify(eve);
-						menu_socet.send(str);
+						
 							}
 							else{
 						$("#requezt_user").text("user "+cat.from_user+" wants to connect ");
 						$.blockUI({ message: $('#dialog_requezt') });
 						$("#requezt_ok").bind("click",function(e){
 						var date= new Array();
-						for(var key in herf)
-						{
-							var line_s=[];
-							for(var i=0;i<herf[key].getSession().getLength();i++)
-								{
-									
-									line_s.push(herf[key].getSession().getLine(i));
-									
-								}
-								var tyu={};
-								tyu[key]=line_s;
-								date.push(tyu);
-						}
-						
+						$("div.kod").each(function(index, element) {
+                        date.push($(this).attr("id").replace(/_/g,"."));
+                        });
 						var eve ={
 							from_user:getCookie("name"),
 							fo_user:cat.from_user,

@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////
-//добавление груп и пользователей
+//добавление  пользователей в меню
 //////////////////////////////////////////////////////////////////////////
 function apdate(){
 	if(timer==null){
@@ -31,30 +31,13 @@ $("#conntent1>div").each(function(index, element) {
 		$(this).remove();
 		}
 });
-var dbdate=[];
-$(date).find("group").each(function(index, element) {
-   dbdate[dbdate.length]="group"+$(this).find("id").text();
-});
 
-$(date).find("group").each(function(index, element) {
-			var kl=$(this).find("id").text();
-		var uid=$("#group"+kl);
-		if(!uid.length){
-    var html='<div class="konteyner" id="group'+$(this).find("id").text()+'"><span class="lol">'+$(this).find("name").text()+'</span><img class="button" src="img/amblem.gif" onClick="connect()" title="присоеденится"</div>';
-				$("#conntent2").append(html);
-				if($("#conntent2").height()>0){
-						$("#group"+$(this).find("id").text()).toggle("100");
-										//добавление групп
-						}
-												
-		}
-    });
 		
 		$(date).find("user").each(function(index, element) {
 			var kl=$(this).find("id").text();
 		var uid=$("#user"+kl);
 		if(!uid.length&&$(this).find("name").text()!=login.name){
-    var html='<div class="konteyner" id="user'+$(this).find("id").text()+'"><a  href="#"class="lol">'+$(this).find("name").text()+'</a><div><img class="button" src="img/amblem.gif" title="join" onClick="connact.connect_p2p({user_id:\''+$(this).find("id").text()+'\',url:\''+$(this).find("URL").text()+'\',user_name:\''+$(this).find("name").text()+'\'})"><span class=" ui-icon-locked ui-icon button" title="ignore"  onClick="ignor(this)"></span><span class=" ui-icon-arrow-4-diag ui-icon button" onClick="clos(this)" title="close"></span><span class=" ui-icon-comment ui-icon button"   ></span></div></div>';
+    var html='<div class="konteyner" id="user'+$(this).find("id").text()+'" name="'+$(this).find("name").text()+'"><a  href="#"class="lol">'+$(this).find("name").text()+'</a><div><img class="button" src="img/amblem.gif" title="join" onClick="connact.connect_p2p({user_id:\''+$(this).find("id").text()+'\',url:\''+$(this).find("URL").text()+'\',user_name:\''+$(this).find("name").text()+'\'})"><span class=" ui-icon-locked ui-icon button" title="ignore"  onClick="ignor(this)"></span><span class=" ui-icon-arrow-4-diag ui-icon button" onClick="clos(this)" title="close"></span><span class=" ui-icon-comment ui-icon button"   ></span></div></div>';
 	$("#conntent1").append(html);
 	var name=$(this).find("name").text();
 	
@@ -75,11 +58,7 @@ $(date).find("group").each(function(index, element) {
 				
 				}
 		});
-				if($("#conntent1").height()>0){
-						$("#user"+$(this).find("id").text()).toggle("100");									//добавление пользователей
-						}
-						
-						
+								
 						
 		}
     });

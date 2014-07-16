@@ -37,9 +37,7 @@
 		  $(".kod").live("focus", function(){ 
 		  
 			});
-		  	  $(".kod").live("blur", function(){ 
-			    clearInterval(obd_tim)
-				});
+		  	 
 		var tabs= $("#tabs").tabs();
 		$("input[type=button]").button();      
 		tabs.delegate( "span.ui-icon-close", "click", function() {
@@ -107,6 +105,19 @@
 				
 	});
 	
+	$("#name_file").live("keyup",function(e){
+		
+		if($("#name_file").val().match(/[^А-Яа-яA-Za-z0-9\\s]/g))
+		{
+			$("#file_name_state").text("format is not valid");
+				
+				
+		}
+		else
+		$("#file_name_state").text("");
+		
+		
+		});
   </script>
 <div id="container" class="window" >
               <div class="menu-window ">
@@ -135,10 +146,10 @@
 <div class="menu">
 			<!-- люди-->
         	<div >
-            <div class="shapka lol" onClick="Onanimation('conntent1',this)">
+            <div class="shapka lol" onClick="Onanimation('conntent1',this)" state="1">
             <span>user</span>
             <span class="ui-icon  ui-icon-refresh  button" ></span>
-             <span class="ui-icon  ui-icon-comment  button" ></span>
+            
             </div>
             <div id="conntent1"  state="0">
    			 </div>
@@ -154,9 +165,11 @@
 
 <!--///////////////////////////Меню диалогов////////////////////////////////////////////////-->
 <div id="add_fram" class="none lol_text">
+<p><label id="file_name_state" style="color:#D90005"></label></p>
 <p class="lettering"><label>new file:  </label><input  id="name_file" type="text">
 <select size="1" id="exp">
 <option value="c_cpp">.cpp</option>
+<option value="c_cpp">.h</option>
 <option value="csharp">.cs</option>
 <option value="php">.php</option>
 <option value="css">.css</option>

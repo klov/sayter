@@ -36,9 +36,7 @@
 }
 #home
 {
-	
-	margin:0px;
-	padding:0px;
+	height:100%;
 }
 .lol
 	{
@@ -91,15 +89,19 @@
 		bottom:0%;
 		width:100%;
 		height:50px;
-		color: #fff;
-        text-shadow: 0 1px 0 rgba(0,0,0,0.4);
+		border-width:2px;
+		border-color:#30384A;
+    	color: #fff;
+        border: 1px solid #9c9c9c; /* Запасной стиль */
+    	border: 1px solid rgba(0, 0, 0, 0.3);            
+    	text-shadow: 0 1px 0 rgba(0,0,0,0.4);
         box-shadow: 0 0 .05em rgba(0,0,0,0.4);
 		background-color:#24364A;
-		background: -webkit-linear-gradient(-45deg, bottom, #24364A, #141E2A); 
-		background: -moz-linear-gradient(to bottom,  #24364A, #141E2A); 
-		background: -o-linear-gradient(to bottom,  #24364A,  #141E2A); 
-		background: -ms-linear-gradient(to bottom,  #24364A, #141E2A);
-		background: linear-gradient(to bottom,  #24364A, #141E2A);
+		background: -webkit-linear-gradient(top, bottom, #24364A, #141E2A); 
+		background: -moz-linear-gradient(top,  #24364A, #141E2A); 
+		background: -o-linear-gradient(top,  #24364A,  #141E2A); 
+		background: -ms-linear-gradient(top,  #24364A, #141E2A);
+		background: linear-gradient(to top,  #24364A, #141E2A);
 		color:#81BEFF;
 		font-size:12px;
 		font-family: Arial, Helvetica, sans-serif;
