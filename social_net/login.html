@@ -27,22 +27,16 @@ function login(){
 	$("#my_name").text(us_name);
 	$("#login").val("");
 	var XHRcon= $.ajax({
-		url:"user_chek.php?name="+us_name+"&id="+getUrlVars()["id"],
+		url:"../php_script/user_chek.php?name="+us_name+"&id="+getUrlVars()["id"],
 		 type:"GET",
-		 dataType:"xml",
-	error:function(e){
-		console.log(e);
-		var val =$(e.responseText).find("ansver");
-		val=val.text();
-		if (val!=0){}
-		},
-	success:function (e)
+	success:function (date)
 	{
-		var val =$(e).find("ansver");
+		var val =$(date).find("ansver");
 		val=val.text();
 		if (val!=0)
 		{
 			var date = new Date;
+			
 			date.setYear(3040);
 		document.cookie="name="+us_name+"; path=/; expires="+date.toUTCString();
 	
