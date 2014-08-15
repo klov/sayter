@@ -27,7 +27,7 @@ function compile(editor,aotput,typ)
 }
 
 
-connact.dialog_clic=function ()
+connact.dialog_clic=function (value)
 { 
 var po;
 var h;
@@ -53,12 +53,16 @@ po=$(po).children(".main_area").children("div:first");
 	var obj='<li><a href="#fragment-'+le+'"><span>'+h+'</span></a><span class="ui-icon ui-icon-close krest" role="presentation"></span></li>';
 	
 	$(po).children("ul").append(obj);
+	if(value==undefined )
+	{
+		value='';
+	}
 	if(compilin_file.indexOf($("#exp :selected").text())>=0)
 	{
-	obj='<div id="fragment-'+le+'"><div class="kod" id="'+id+'"></div><div class="tab"><div class="button" id="compil_buton'+le+'"><span class="ui-icon ui-icon-play icon-compilin"></span><span class="lol">compilin</span><div class="none"><div></div></div>';
+	obj='<div id="fragment-'+le+'"><div class="kod" id="'+id+'">'+value+'</div><div class="tab"><div class="button" id="compil_buton'+le+'"><span class="ui-icon ui-icon-play icon-compilin"></span><span class="lol">compilin</span><div class="none"><div></div></div>';
 	}else
 	{
-		obj='<div id="fragment-'+le+'"><div class="kod" id="'+id+'"></div></div></div>';
+		obj='<div id="fragment-'+le+'"><div class="kod" id="'+id+'">'+value+'</div></div></div>';
 	}
 	
 				
@@ -70,6 +74,7 @@ var ed = ace.edit(id);
     ed.setTheme("ace/theme/eclipse");
 	var str ="ace/mode/"+$("#exp :selected").val();
     ed.getSession().setMode(str);
+	$('#fragment-'+le).css("padding",0);
 	ed.on("change",function(e,edit){
 		var re =e.data;
 		var lins =edit.getSession().getDocument().getAllLines();
