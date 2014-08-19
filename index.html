@@ -165,6 +165,10 @@
 
 <!--///////////////////////////Меню диалогов////////////////////////////////////////////////-->
 <div id="add_fram" class="none lol_text">
+<p>
+
+<input type="file" id="file" name="file"  onChange="read_from_file()" style="display:none"/>
+</p>
 <p><label id="file_name_state" style="color:#D90005"></label></p>
 <p class="lettering"><label>new file:  </label><input  id="name_file" type="text">
 <select size="1" id="exp">
@@ -177,10 +181,11 @@
 </select>
 </p>
 
-
 <p><input type="button" onClick="connact.dialog_clic()" class="lol_text" value="   OK   "> 
 <input type="button" onClick="$.unblockUI()"  value="Cancel">
+<input type="button" onClick="$('#file').click()" value="File">
 </p>
+
 </div>
 <!--////////////////////////////Вход///////////////////////////////-->
 <div id="login" class="none lettering">
