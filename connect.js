@@ -209,6 +209,9 @@ var ed = ace.edit(id);
 	}
 
 
+
+
+  
 // добавляет нового пользователя на экран
 	
 	connact.add_new_users =function(param)
@@ -309,3 +312,33 @@ var ed = ace.edit(id);
 	}
 	}
 }
+function read_from_file() {
+	
+    var files = document.getElementById('file').files;
+    if (!files.length) {
+      alert('Please select a file!');
+      return;
+    }
+	
+    var file = files[0];
+    var name = file.name;
+	name=name.split('.');
+	if($("#exp :contains(."+name[1]+")").length>0)
+	{
+		$("#exp :contains(."+name[1]+")").attr("selected", "selected");
+		$("#name_file").val(name[0]);
+	}
+	else {
+		alert('Format not supported');
+	return;
+	}
+    var reader = new window.FileReader();
+
+   
+    reader.onloadend = function(evt) {
+		connact.dialog_clic(this.result);
+		        
+    };
+   
+    reader.readAsText(file);
+  }
